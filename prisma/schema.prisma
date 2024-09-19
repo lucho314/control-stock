@@ -1,0 +1,147 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model acciones_de_usuario {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuario_id String?   @db.Uuid
+  accion     String?
+  fecha      DateTime? @default(now()) @db.Timestamptz(6)
+  usuarios   usuarios? @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model clientes {
+  id               String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nombre           String?
+  contacto         String?
+  direccion        String?
+  email            String?
+  telefono         String?
+  ordenes_de_venta ordenes_de_venta[]
+}
+
+model detalle_ordenes_de_compra {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orden_compra_id String?  @db.Uuid
+  producto_id     String?  @db.Uuid
+  cantidad        Int?
+  precio_unitario Decimal? @db.Decimal
+}
+
+model detalle_ordenes_de_venta {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orden_venta_id  String?  @db.Uuid
+  producto_id     String?  @db.Uuid
+  cantidad        Int?
+  precio_unitario Decimal? @db.Decimal
+}
+
+model facturas {
+  id               String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orden_venta_id   String?           @db.Uuid
+  total            Decimal?          @db.Decimal
+  fecha_factura    DateTime?         @default(now()) @db.Timestamptz(6)
+  ordenes_de_venta ordenes_de_venta? @relation(fields: [orden_venta_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model inventario {
+  id                String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  producto_id       String?    @db.Uuid
+  stock_disponible  Int?
+  stock_reservado   Int?
+  stock_en_transito Int?
+  productos         productos? @relation(fields: [producto_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model movimientos_de_inventario {
+  id              String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  producto_id     String?    @db.Uuid
+  tipo_movimiento String?
+  cantidad        Int?
+  fecha           DateTime?  @default(now()) @db.Timestamptz(6)
+  motivo          String?
+  origen          String?
+  productos       productos? @relation(fields: [producto_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model niveles_de_stock {
+  id           String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  producto_id  String?    @db.Uuid
+  stock_minimo Int?
+  stock_maximo Int?
+  productos    productos? @relation(fields: [producto_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model ordenes_de_compra {
+  id                       String                     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  proveedor_id             String?                    @db.Uuid
+  fecha_orden              DateTime?                  @default(now()) @db.Timestamptz(6)
+  estado                   String?
+  proveedores              proveedores?               @relation(fields: [proveedor_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  recepciones_de_productos recepciones_de_productos[]
+}
+
+model ordenes_de_venta {
+  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  cliente_id  String?    @db.Uuid
+  fecha_orden DateTime?  @default(now()) @db.Timestamptz(6)
+  estado      String?
+  facturas    facturas[]
+  clientes    clientes?  @relation(fields: [cliente_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model productos {
+  id                        String                      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nombre                    String?
+  descripcion               String?
+  categoria                 String?
+  precio                    Decimal?                    @db.Decimal
+  codigo_de_barras          String?
+  proveedor_id              String?                     @db.Uuid
+  inventario                inventario[]
+  movimientos_de_inventario movimientos_de_inventario[]
+  niveles_de_stock          niveles_de_stock[]
+  proveedores               proveedores?                @relation(fields: [proveedor_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  recepciones_de_productos  recepciones_de_productos[]
+}
+
+model proveedores {
+  id                String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nombre            String?
+  contacto          String?
+  direccion         String?
+  ordenes_de_compra ordenes_de_compra[]
+  productos         productos[]
+}
+
+model recepciones_de_productos {
+  id                String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orden_compra_id   String?            @db.Uuid
+  producto_id       String?            @db.Uuid
+  cantidad_recibida Int?
+  fecha_recepcion   DateTime?          @default(now()) @db.Timestamptz(6)
+  ordenes_de_compra ordenes_de_compra? @relation(fields: [orden_compra_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  productos         productos?         @relation(fields: [producto_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model roles {
+  id       String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nombre   String?
+  usuarios usuarios[]
+}
+
+model usuarios {
+  id                  String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nombre              String?
+  rol                 String?
+  email               String?
+  contrasena          String?
+  rol_id              String?               @db.Uuid
+  acciones_de_usuario acciones_de_usuario[]
+  roles               roles?                @relation(fields: [rol_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
