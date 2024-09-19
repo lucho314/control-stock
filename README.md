@@ -10,6 +10,7 @@ docker compose up -d
 
 2. Renombrar el .env.template a .env
 3. Reemplazar las variables de entorno
+4. ejecutar ` npm install`
 
 # Prisma commnads
 
