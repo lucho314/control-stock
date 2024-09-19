@@ -21,4 +21,8 @@ npx prisma generate
 
 ```
 
+5. Lanzar la app en desarrollo
+
+`npm run dev`
+
 4. Ejecutar el SEED para [crear la base de datos local](localhost:3000/api/seed)
