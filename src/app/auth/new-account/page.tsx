@@ -1,5 +1,10 @@
 import { RegisterForm } from "./ui/RegisterForm";
 
+export const metadata = {
+  title: "Registro de cuenta",
+  description: "Registro de cuenta en Control de Stock",
+};
+
 export default function NewAccountPage() {
   return (
     <section className="flex flex-col h-screen items-center justify-center">

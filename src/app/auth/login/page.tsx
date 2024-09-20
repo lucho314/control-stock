@@ -3,15 +3,14 @@ import { AuthError } from "next-auth";
 import { auth, signIn } from "@/auth.config";
 import { LoginForm } from "./ui/login-form";
 
+export const metadata = {
+  title: "Iniciar sesion",
+  description: "Iniciar sesion en Control de Stock",
+};
+
 export default async function SignInPage(props: {
   searchParams: { callbackUrl: string | undefined; error?: string };
 }) {
-  const session = await auth();
-
-  if (session) {
-    redirect(props.searchParams?.callbackUrl || "/");
-  }
-
   const error = props.searchParams?.error;
 
   return (
