@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import bcryptjs from "bcryptjs";
 
 export async function GET(request: Request) {
   //truncate tables
@@ -11,6 +12,8 @@ export async function GET(request: Request) {
   await prisma.productos.deleteMany();
   await prisma.proveedores.deleteMany();
   await prisma.usuarios.deleteMany();
+  await prisma.clientes.deleteMany();
+  await prisma.user.deleteMany();
 
   const proveedor1 = await prisma.proveedores.create({
     data: {
@@ -132,6 +135,14 @@ export async function GET(request: Request) {
       orden_venta_id: ordenVenta1.id,
       total: 100.0,
       fecha_factura: new Date(),
+    },
+  });
+
+  const user = await prisma.user.create({
+    data: {
+      name: "Admin",
+      email: "admin@mail.com",
+      password: bcryptjs.hashSync("administrador"),
     },
   });
 
