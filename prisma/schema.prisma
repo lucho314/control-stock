@@ -148,8 +148,11 @@ model usuarios {
 
 
 model User {
-  id            String          @id @default(cuid())
+  id            String          @id @default(uuid())
   name          String?
+  password      String?
+  roles        String[] @default(["user"])
+  isActive      Boolean         @default(true)
   email         String          @unique
   emailVerified DateTime?
   image         String?
