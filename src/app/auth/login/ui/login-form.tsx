@@ -2,6 +2,7 @@ import { signIn } from "@/auth.config";
 import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
 import { IoInformationOutline } from "react-icons/io5";
+import Link from "next/link";
 
 interface Props {
   errorType: string | undefined;
@@ -81,9 +82,12 @@ export const LoginForm = ({ errorType }: Props) => {
       </button>
       <div className="text-sm font-medium text-gray-900 dark:text-white">
         Not registered yet?{" "}
-        <a className="text-blue-600 hover:underline dark:text-blue-500">
+        <Link
+          href={"/auth/new-account"}
+          className="text-blue-600 hover:underline dark:text-blue-500"
+        >
           Create account
-        </a>
+        </Link>
       </div>
     </form>
   );

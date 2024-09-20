@@ -2,10 +2,14 @@ import { RegisterForm } from "./ui/RegisterForm";
 
 export default function NewAccountPage() {
   return (
-    <div className="flex flex-col min-h-screen pt-32 sm:pt-52">
-      <h1 className={`text-4xl mb-5`}>Nueva cuenta</h1>
+    <section className="flex flex-col h-screen items-center justify-center">
+      <div className="w-full lg:max-w-xl p-6 space-y-8 sm:p-8 bg-white rounded-lg shadow-xl dark:bg-gray-800">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+          Nueva cuenta
+        </h2>
 
-      <RegisterForm />
-    </div>
+        <RegisterForm />
+      </div>
+    </section>
   );
 }
