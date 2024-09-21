@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 const providerSchema = z.object({
@@ -42,6 +43,7 @@ export const createUpdateProvider = async (formData: FormData) => {
   });
 
   //revalidar path
+  revalidatePath("/provider");
 
   return { ok: true, provider: newProvider };
 };
