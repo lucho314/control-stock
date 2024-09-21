@@ -103,6 +103,7 @@ model productos {
   precio                    Decimal?                    @db.Decimal
   codigo_de_barras          String?
   proveedor_id              String?                     @db.Uuid
+  inStock                   Int                         @default(0)
   inventario                inventario[]
   movimientos_de_inventario movimientos_de_inventario[]
   niveles_de_stock          niveles_de_stock[]
