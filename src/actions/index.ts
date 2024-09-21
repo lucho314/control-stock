@@ -5,3 +5,4 @@ export * from "./auth/register";
 export * from "./provider/create-update";
 export * from "./provider/delete";
 export * from "./provider/pagination";
+export * from "./provider/get";
