@@ -38,6 +38,7 @@ export async function GET(request: Request) {
       email: "clienteA@example.com",
       telefono: "123456789",
       direccion: "Dirección Cliente A",
+      dni: "12345678",
     },
   });
 
@@ -47,6 +48,7 @@ export async function GET(request: Request) {
       email: "clienteB@example.com",
       telefono: "987654321",
       direccion: "Dirección Cliente B",
+      dni: "87654321",
     },
   });
 
