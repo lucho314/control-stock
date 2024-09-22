@@ -6,3 +6,16 @@ export * from "./provider/create-update";
 export * from "./provider/delete";
 export * from "./provider/pagination";
 export * from "./provider/get";
+
+export * from "./client/client-pagination";
+export * from "./client/create-update-client";
+export * from "./client/find-client-by-term";
+
+export * from "./product/create-update-product";
+export * from "./product/delete-product-image";
+export * from "./product/get-product-by-slug";
+export * from "./product/get-stock-by-slug";
+export * from "./product/product-pagination";
+
+export * from "./user/change-user-role";
+export * from "./user/get-paginater-users";
