@@ -11,6 +11,15 @@ const clientSchema = z.object({
   direccion: z.string(),
   email: z.string(),
   telefono: z.string(),
+  dni: z.string().refine(
+    (dni) => {
+      return /^\d{7,8}$/.test(dni);
+    },
+    {
+      message:
+        "El DNI debe contener entre 7 y 8 dígitos numéricos sin puntos ni guiones.",
+    }
+  ),
 });
 
 export const createUpdateClient = async (formData: FormData) => {
