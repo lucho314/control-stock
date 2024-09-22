@@ -22,6 +22,7 @@ model clientes {
   direccion        String?
   email            String?
   telefono         String?
+  dni              String            @unique
   ordenes_de_venta ordenes_de_venta[]
 }
 
