@@ -6,18 +6,17 @@ interface Props {
   children: React.ReactNode;
 }
 
-export default async function RootLayout({ children, ...props }: Props) {
+export default async function RootLayout(props: Props) {
+  const { children, searchParams } = props;
   const session = await auth();
 
   if (session) {
-    redirect(props.searchParams?.callbackUrl || "/");
+    redirect(searchParams?.callbackUrl || "/");
   }
 
   return (
-    <html lang="en">
-      <body className="dark:bg-gray-900 min-h-screen w-full flex flex-col">
-        {children}
-      </body>
-    </html>
+    <div className="dark:bg-gray-900 min-h-screen w-full flex flex-col">
+      {children}
+    </div>
   );
 }
