@@ -2,7 +2,13 @@
 
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, Package, ShoppingCart, Users } from "lucide-react";
+import {
+  Factory,
+  LayoutDashboard,
+  Package,
+  ShoppingCart,
+  Users,
+} from "lucide-react";
 import Link from "next/link";
 
 const NavMenu = () => {
@@ -52,6 +58,17 @@ const NavMenu = () => {
           <Users className="mr-2 h-4 w-4" />
           Clientes
         </Button>
+        <Link href="/admin/provider">
+          <Button
+            variant="ghost"
+            className={`w-full justify-start ${
+              menuSelect == "clientes" && "bg-blue-200"
+            } hover:bg-blue-400`}
+          >
+            <Factory className="mr-2 h-4 w-4" />
+            Proveedores
+          </Button>
+        </Link>
       </nav>
     </aside>
   );
