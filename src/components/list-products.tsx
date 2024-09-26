@@ -20,7 +20,7 @@ const generarProductos = (): IProducto[] =>
     imagen: `https://imgs.search.brave.com/Lel2sTEXCxvixfcCGmqqD_ME2YXTTx09AV3K325-iok/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvMTU1/MTYxNjk0L2VzL2Zv/dG8vbW90b3ItZGUt/Y29jaGUuanBnP3M9/NjEyeDYxMiZ3PTAm/az0yMCZjPTJBZjdZ/aVU3R3oxSV9vNlRW/Tjd6QXdzbS15VEFk/REhXSWJkc3VCY2t6/NE09`,
   }));
 
-const Listproducts = ({ login }: { login: boolean }) => {
+const Listproducts = () => {
   const [paginaActual, setPaginaActual] = useState(1);
   const [busqueda, setBusqueda] = useState("");
   const [productos, setProductos] = useState<IProducto[]>([]);
@@ -79,26 +79,6 @@ const Listproducts = ({ login }: { login: boolean }) => {
               >
                 <Button className="mt-auto m-1">Ver</Button>
               </Link>
-              {login && (
-                <>
-                  <Link
-                    href={"/products/" + producto.id}
-                    className="text-2xl font-bold"
-                  >
-                    <Button className="mt-auto m-1" variant={"warning"}>
-                      Actualizar
-                    </Button>
-                  </Link>
-                  <Link
-                    href={"/products/" + producto.id}
-                    className="text-2xl font-bold"
-                  >
-                    <Button className="mt-auto m-1" variant={"destructive"}>
-                      Eliminar
-                    </Button>
-                  </Link>
-                </>
-              )}
             </div>
           </div>
         ))}

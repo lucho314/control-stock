@@ -9,7 +9,7 @@ const LogoutButton = () => {
   };
   return (
     <Button variant="outline" onClick={handleClick}>
-      <User className="mr-2 h-4 w-4" /> Cerrar sesion
+      <User className="mr-2 h-4 w-4" /> Cerrar sesión
     </Button>
   );
 };
