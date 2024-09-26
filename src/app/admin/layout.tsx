@@ -39,7 +39,7 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
     <div className="flex flex-col min-h-screen">
       {/* Navbar */}
       <header className="bg-white border-b">
-        <div className="container mx-auto px-4">
+        <div className="mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
               <ButtonAside />
