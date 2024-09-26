@@ -1,3 +1,5 @@
+import { auth } from "@/auth.config";
+import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -24,8 +26,15 @@ import {
 } from "lucide-react";
 import ButtonAside from "./components/button-aside";
 import NavMenu from "./components/nav-menu";
+import LogoutButton from "@/components/logout-button";
 
-const layout = ({ children }: { children: React.ReactNode }) => {
+const layout = async ({ children }: { children: React.ReactNode }) => {
+  const session = await auth();
+
+  if (!session) {
+    redirect("/auth/login");
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Navbar */}
@@ -78,8 +87,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
                     <span>Configuración</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Cerrar sesión</span>
+                    <LogoutButton />
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

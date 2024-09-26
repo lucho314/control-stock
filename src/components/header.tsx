@@ -115,7 +115,11 @@ const Header = async () => {
             </Link>
           </>
         ) : (
-          <LogoutButton />
+          <Link href="/admin/dashboard">
+            <Button variant="outline">
+              <User className="mr-2 h-4 w-4" /> Admin
+            </Button>
+          </Link>
         )}
       </div>
     </header>
