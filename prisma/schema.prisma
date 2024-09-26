@@ -13,6 +13,7 @@ enum Role {
 }
 
 
+
 model acciones_de_usuario {
   id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   usuario_id String?   @db.Uuid
@@ -104,25 +105,32 @@ model ordenes_de_venta {
 
 model productos {
   id                        String                      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  categoria_id               String?                     @db.Uuid // Campo para la relación con la categoría
   nombre                    String?
   descripcion               String?
-  categoria                 String?
   precio                    Decimal?                    @db.Decimal
   codigo_de_barras          String?
   proveedor_id              String?                     @db.Uuid
   inStock                   Int                         @default(0)
+  peso                     Decimal?                    @db.Decimal  
+  tamano                   Decimal?                    @db.Decimal
+  color                    String?
+  marca                    String?
+  imagen                  String?
   inventario                inventario[]
   movimientos_de_inventario movimientos_de_inventario[]
   niveles_de_stock          niveles_de_stock[]
   proveedores               proveedores?                @relation(fields: [proveedor_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   recepciones_de_productos  recepciones_de_productos[]
+   categoria                 Categoria?                  @relation(fields: [categoria_id], references: [id]) // Relación con la categoría
 }
 
 model proveedores {
   id                String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   nombre            String?
-  contacto          String?
-  direccion         String?
+  telefono         String?
+  email            String?
+  direccion        String?
   ordenes_de_compra ordenes_de_compra[]
   productos         productos[]
 }
@@ -226,4 +234,11 @@ model Authenticator {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
  
   @@id([userId, credentialID])
+}
+
+model Categoria {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nombre      String   @unique
+  descripcion String?
+  productos    productos[]
 }
