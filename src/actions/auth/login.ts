@@ -16,7 +16,7 @@ export async function authenticate(
 
     return "Success";
   } catch (error) {
-    console.log(error);
+    console.error(error);
 
     return "CredentialsSignin";
   }
@@ -28,7 +28,7 @@ export const login = async (email: string, password: string) => {
 
     return { ok: true };
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return {
       ok: false,
       message: "No se pudo iniciar sesión",

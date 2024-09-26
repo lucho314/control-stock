@@ -65,7 +65,7 @@ async function main() {
 
 async function getRandomProveedor() {
   // Generar un índice aleatorio (0 o 1)
-  const randomIndex = Math.floor(Math.random() * 2);
+  const randomIndex = Math.floor(Math.random() * 20);
 
   // Obtener el proveedor correspondiente al índice aleatorio
   const randomProveedor = await prisma.proveedores.findMany({
