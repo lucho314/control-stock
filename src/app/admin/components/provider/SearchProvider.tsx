@@ -8,8 +8,10 @@ import { useDebounce } from "use-debounce";
 
 export const SearchProvider = ({
   search = "",
+  urlPush = "",
 }: {
   search: string | undefined;
+  urlPush: string;
 }) => {
   const router = useRouter();
 
@@ -18,9 +20,9 @@ export const SearchProvider = ({
 
   useEffect(() => {
     if (!query) {
-      router.push("/admin/provider");
+      router.push(urlPush);
     } else {
-      router.push(`/admin/provider?q=${query}`);
+      router.push(`${urlPush}?q=${query}`);
     }
   }, [query, router]);
 
