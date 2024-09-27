@@ -131,8 +131,10 @@ model proveedores {
   telefono         String?
   email            String?
   direccion        String?
+  activo           Boolean?          @default(true)
   ordenes_de_compra ordenes_de_compra[]
   productos         productos[]
+   @@index([activo, nombre])
 }
 
 model recepciones_de_productos {
