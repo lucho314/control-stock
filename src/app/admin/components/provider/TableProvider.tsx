@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { proveedores } from "@prisma/client";
-import { ButtonActionTable, buttonActionTable } from "./button-accion-table";
+import { ButtonActionTable } from "./button-accion-table";
 
 interface Props {
   providers: proveedores[];
