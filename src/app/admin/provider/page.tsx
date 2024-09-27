@@ -1,21 +1,11 @@
 import { getPaginatedProvider } from "@/actions";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { CirclePlus, Search } from "lucide-react";
+import { CirclePlus } from "lucide-react";
 import { TableProvider } from "../components/provider/TableProvider";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import { Paginacion } from "../components/ui/Pagination";
 import { SearchProvider } from "../components/provider/SearchProvider";
 
-interface Props {
+export interface Props {
   searchParams: {
     page?: string;
     q?: string;
@@ -40,7 +30,7 @@ export default async function ProviderPage({ searchParams }: Props) {
           Nuevo proveedor
         </Button>
       </h2>
-      <SearchProvider search={q} />
+      <SearchProvider search={q} urlPush="/admin/provider" />
       <TableProvider providers={providers} />
       {
         // Pagination
