@@ -26,6 +26,7 @@ export const getPaginatedProvider = async ({
           contains: q,
           mode: "insensitive",
         },
+        activo: true,
       },
     });
 

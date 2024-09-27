@@ -1,10 +1,12 @@
 import { getPaginatedProvider } from "@/actions";
 import { Button } from "@/components/ui/button";
-import { CirclePlus } from "lucide-react";
+import { CirclePlus, PlusCircle } from "lucide-react";
 import { TableProvider } from "../components/provider/TableProvider";
 import { Paginacion } from "../components/ui/Pagination";
 import { SearchProvider } from "../components/provider/SearchProvider";
-
+import DialogNewProvider from "../components/provider/dialog-new-provider";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export interface Props {
   searchParams: {
     page?: string;
@@ -22,22 +24,27 @@ export default async function ProviderPage({ searchParams }: Props) {
   });
 
   return (
-    <section className="w-full px-10 pt-20">
-      <h2 className="scroll-m-20 border-b pb-6 text-3xl font-semibold tracking-tight first:mt-0 flex justify-between">
-        Provedores
-        <Button className="mt-auto m-1">
-          <CirclePlus className="h-5 w-5 mr-2" />
-          Nuevo proveedor
-        </Button>
-      </h2>
-      <SearchProvider search={q} urlPush="/admin/provider" />
-      <TableProvider providers={providers} />
-      {
-        // Pagination
-        totalPages > 1 && (
-          <Paginacion totalPages={totalPages} currentPage={currentPage} />
-        )
-      }
+    <section className="flex-1 p-6">
+      <div className="mx-auto px-4 py-8">
+        <h2 className="scroll-m-20 border-b pb-6 text-3xl font-semibold tracking-tight first:mt-0 flex justify-between">
+          Provedores
+          <DialogNewProvider>
+            <Button>
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Nuevo Proveedor
+            </Button>
+          </DialogNewProvider>
+        </h2>
+        <SearchProvider search={q} urlPush="/admin/provider" />
+        <TableProvider providers={providers} />
+        {
+          // Pagination
+          totalPages > 1 && (
+            <Paginacion totalPages={totalPages} currentPage={currentPage} />
+          )
+        }
+      </div>
+      <ToastContainer className="text-black text-sm" />
     </section>
   );
 }
