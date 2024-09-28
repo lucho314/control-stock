@@ -3,9 +3,7 @@ import prisma from "../lib/prisma";
 import { initialData } from "./seed";
 
 async function main() {
-  await prisma.facturas.deleteMany();
   await prisma.recepciones_de_productos.deleteMany();
-  await prisma.ordenes_de_venta.deleteMany();
   await prisma.ordenes_de_compra.deleteMany();
   await prisma.inventario.deleteMany();
   await prisma.productos.deleteMany();

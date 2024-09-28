@@ -1,4 +1,5 @@
 "use client";
+import { getProductByID } from "@/actions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -19,34 +20,70 @@ import {
   TableRow,
   Table,
 } from "@/components/ui/table";
+import { type Venta } from "@/types";
 
-import React, { useState } from "react";
+import React, { KeyboardEventHandler, useState } from "react";
 
 interface Props {
   children?: React.ReactNode;
 }
 
+const defaultVenta: Venta = {
+  id: "",
+  numeracion: "",
+  fecha: new Date(),
+  numero: "",
+  formaDePago: "EFECTIVO",
+  clienteId: "",
+  neto: 0,
+  subTotal: 0,
+  bonificacion: null,
+  iva: 0,
+  total: 0,
+  cliente: {
+    nombre: "generico",
+    direccion: "generico",
+    email: "",
+    telefono: "",
+  },
+  productos: [],
+};
+
 export const DialogNewSale = ({ children }: Props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const [productos, setProductos] = useState([
-    { codigo: "", nombre: "", precio: "", cantidad: "", total: "", iva: "" },
-  ]);
+  const [venta, setVenta] = useState<Venta>(defaultVenta);
 
+  console.log(venta);
   // Función para agregar una nueva fila de producto
-  const agregarProducto = () => {
-    setProductos([
-      ...productos,
-      { codigo: "", nombre: "", precio: "", cantidad: "", total: "", iva: "" },
-    ]);
-  };
 
   // Función para manejar cambios en la tabla de productos
-  const handleProductoChange = (index, e) => {
-    const { name, value } = e.target;
-    const newProductos = [...productos];
-    newProductos[index][name] = value;
-    setProductos(newProductos);
+  //const handleProductoChange = (index, e) => {};
+  const handleKeydown: KeyboardEventHandler<HTMLInputElement> = async (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const input = e.target as HTMLInputElement;
+      const value = input.value;
+      const producto = await getProductByID(value);
+      if (producto) {
+        setVenta({
+          ...venta,
+          productos: [
+            ...venta.productos,
+            {
+              id: "",
+              ventaId: "",
+              productoId: "",
+              cantidad: 1,
+              precio: 0,
+              iva: 0,
+              total: 0,
+              producto: producto,
+            },
+          ],
+        });
+      }
+    }
   };
 
   return (
@@ -68,7 +105,12 @@ export const DialogNewSale = ({ children }: Props) => {
               <div className="grid grid-cols-3 gap-4">
                 <div>
                   <Label htmlFor="fecha">Fecha</Label>
-                  <Input id="fecha" type="date" required />
+                  <Input
+                    id="fecha"
+                    type="date"
+                    required
+                    defaultValue={venta.fecha.toISOString().slice(0, 10)}
+                  />
                 </div>
                 <div>
                   <Label htmlFor="numeracion">Numeración</Label>
@@ -77,21 +119,22 @@ export const DialogNewSale = ({ children }: Props) => {
                     type="text"
                     className="w-full p-2 border"
                     required
+                    defaultValue={venta.numeracion}
                   />
                 </div>
                 <div>
                   <Label htmlFor="formaPago">Forma de Pago</Label>
                   <select id="formaPago" className="w-full p-2 border" required>
-                    <option value="efectivo">Efectivo</option>
-                    <option value="tarjeta">Tarjeta</option>
-                    <option value="transferencia">Transferencia</option>
+                    <option defaultValue="EFECTIVO">Efectivo</option>
+                    <option defaultValue="TARJETA">Tarjeta</option>
+                    <option defaultValue="TRANFERENCIA">Transferencia</option>
                   </select>
                 </div>
               </div>
             </div>
 
             {/* Sección de Cliente */}
-            <div className="py-4">
+            {/* <div className="py-4">
               <h2 className="text-lg font-bold">Datos del Cliente</h2>
               <div className="grid grid-cols-3 gap-4">
                 <div>
@@ -101,6 +144,7 @@ export const DialogNewSale = ({ children }: Props) => {
                     type="text"
                     className="w-full p-2 border"
                     required
+                    defaultValue={venta.cliente.nombre!}
                   />
                 </div>
                 <div>
@@ -109,7 +153,7 @@ export const DialogNewSale = ({ children }: Props) => {
                     id="direccion"
                     type="text"
                     className="w-full p-2 border"
-                    required
+                    defaultValue={venta.cliente.direccion!}
                   />
                 </div>
                 <div>
@@ -122,7 +166,7 @@ export const DialogNewSale = ({ children }: Props) => {
                   />
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* Grilla de Productos */}
             <div className="py-4">
@@ -140,13 +184,13 @@ export const DialogNewSale = ({ children }: Props) => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {productos.map((producto, index) => (
+                    {venta.productos.map(({ producto, cantidad }, index) => (
                       <TableRow key={index}>
                         <TableCell>
                           <Input
                             variant="sm"
                             name="codigo"
-                            value={producto.codigo}
+                            defaultValue={producto.codigo_interno!}
                             onChange={(e) => handleProductoChange(index, e)}
                             className="w-full p-2"
                           />
@@ -155,7 +199,7 @@ export const DialogNewSale = ({ children }: Props) => {
                           <Input
                             variant="sm"
                             name="nombre"
-                            value={producto.nombre}
+                            defaultValue={producto.nombre!}
                             onChange={(e) => handleProductoChange(index, e)}
                             className="w-full p-2"
                           />
@@ -165,7 +209,7 @@ export const DialogNewSale = ({ children }: Props) => {
                           <Input
                             variant="sm"
                             name="cantidad"
-                            value={producto.cantidad}
+                            defaultValue={cantidad}
                             onChange={(e) => handleProductoChange(index, e)}
                             className="w-full p-2"
                           />
@@ -174,6 +218,34 @@ export const DialogNewSale = ({ children }: Props) => {
                         <TableCell>21%</TableCell>
                       </TableRow>
                     ))}
+
+                    <TableRow>
+                      <TableCell>
+                        <Input
+                          variant="sm"
+                          name="codigo"
+                          className="w-full p-2"
+                          onKeyDown={handleKeydown}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Input
+                          variant="sm"
+                          name="nombre"
+                          className="w-full p-2"
+                        />
+                      </TableCell>
+                      <TableCell>$0.00</TableCell>
+                      <TableCell>
+                        <Input
+                          variant="sm"
+                          name="cantidad"
+                          className="w-full p-2"
+                        />
+                      </TableCell>
+                      <TableCell>$0.00</TableCell>
+                      <TableCell>21%</TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </div>
