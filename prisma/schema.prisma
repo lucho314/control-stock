@@ -12,7 +12,12 @@ enum Role {
   user
 }
 
-
+enum FormaDePago {
+  TARJETA
+  EFECTIVO
+  TRANSFERENCIA
+  OTRO
+}
 
 model acciones_de_usuario {
   id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
@@ -30,7 +35,7 @@ model clientes {
   email            String?
   telefono         String?
   dni              String            @unique
-  ordenes_de_venta ordenes_de_venta[]
+  ventas       venta[]
 }
 
 model detalle_ordenes_de_compra {
@@ -49,13 +54,13 @@ model detalle_ordenes_de_venta {
   precio_unitario Decimal? @db.Decimal
 }
 
-model facturas {
-  id               String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  orden_venta_id   String?           @db.Uuid
-  total            Decimal?          @db.Decimal
-  fecha_factura    DateTime?         @default(now()) @db.Timestamptz(6)
-  ordenes_de_venta ordenes_de_venta? @relation(fields: [orden_venta_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
+// model facturas {
+//   id               String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+//   orden_venta_id   String?           @db.Uuid
+//   total            Decimal?          @db.Decimal
+//   fecha_factura    DateTime?         @default(now()) @db.Timestamptz(6)
+//   ordenes_de_venta ordenes_de_venta? @relation(fields: [orden_venta_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+// }
 
 model inventario {
   id                String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
@@ -94,14 +99,14 @@ model ordenes_de_compra {
   recepciones_de_productos recepciones_de_productos[]
 }
 
-model ordenes_de_venta {
-  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  cliente_id  String?    @db.Uuid
-  fecha_orden DateTime?  @default(now()) @db.Timestamptz(6)
-  estado      String?
-  facturas    facturas[]
-  clientes    clientes?  @relation(fields: [cliente_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
+// model ordenes_de_venta {
+//   id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+//   cliente_id  String?    @db.Uuid
+//   fecha_orden DateTime?  @default(now()) @db.Timestamptz(6)
+//   estado      String?
+//   facturas    facturas[]
+//   clientes    clientes?  @relation(fields: [cliente_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+// }
 
 model productos {
   id                        String                      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
@@ -117,12 +122,15 @@ model productos {
   color                    String?
   marca                    String?
   imagen                  String?
+  codigo_interno           String?
   inventario                inventario[]
   movimientos_de_inventario movimientos_de_inventario[]
   niveles_de_stock          niveles_de_stock[]
   proveedores               proveedores?                @relation(fields: [proveedor_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   recepciones_de_productos  recepciones_de_productos[]
-   categoria                 Categoria?                  @relation(fields: [categoria_id], references: [id]) // Relación con la categoría
+  categoria                 Categoria?                  @relation(fields: [categoria_id], references: [id]) // Relación con la categoría
+  ventas     venta_producto[]
+  @@index([nombre, codigo_de_barras, codigo_interno])
 }
 
 model proveedores {
@@ -243,4 +251,35 @@ model Categoria {
   nombre      String   @unique
   descripcion String?
   productos    productos[]
+}
+
+
+
+model venta {
+   id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+   numeracion    String
+  fecha          DateTime         @default(now())
+  numero         String
+  formaDePago    FormaDePago      // Aquí usamos el enum en lugar de una relación
+  clienteId      String           @db.Uuid
+  neto           Float
+  subTotal       Float
+  bonificacion   Float?           // Bonificación es opcional
+  iva            Float
+  total          Float
+  cliente        clientes         @relation(fields: [clienteId], references: [id])
+  productos      venta_producto[]
+}
+
+
+model venta_producto {
+  id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ventaId        String           @db.Uuid
+  productoId     String           @db.Uuid
+  cantidad       Int
+  precio         Float
+  iva            Float
+  total          Float
+  productos      productos        @relation(fields: [productoId], references: [id])
+  venta          venta            @relation(fields: [ventaId], references: [id])
 }

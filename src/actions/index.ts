@@ -13,8 +13,8 @@ export * from "./client/find-client-by-term";
 
 export * from "./product/create-update-product";
 export * from "./product/delete-product-image";
-export * from "./product/get-product-by-slug";
-export * from "./product/get-stock-by-slug";
+export * from "./product/get-product-by-code";
+export * from "./product/get-stock-by-id";
 export * from "./product/product-pagination";
 
 export * from "./user/change-user-role";

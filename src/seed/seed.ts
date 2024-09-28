@@ -10,6 +10,7 @@ interface SeedProduct {
   color: string;
   marca: string;
   imagen: string;
+  codigo_interno: string;
 }
 
 interface SeedProveedor {
@@ -273,6 +274,7 @@ export const initialData: SeedData = {
       color: "Negro",
       marca: "Yamaha",
       imagen: "filtro-de-aceite-yamaha.png",
+      codigo_interno: "12AB",
     },
     {
       nombre: "Cadena de Transmisión Kawasaki",
@@ -286,6 +288,7 @@ export const initialData: SeedData = {
       color: "Plata",
       marca: "Kawasaki",
       imagen: "cadena-de-transmision-kawasaki.png",
+      codigo_interno: "123BC",
     },
     {
       nombre: "Amortiguador Trasero Honda",
@@ -298,6 +301,7 @@ export const initialData: SeedData = {
       color: "Rojo",
       marca: "Honda",
       imagen: "amortiguador-trasero-honda.png",
+      codigo_interno: "123DE",
     },
     {
       nombre: "Bujía NGK Iridium",
@@ -310,6 +314,7 @@ export const initialData: SeedData = {
       color: "Plata",
       marca: "NGK",
       imagen: "bujia-ngk-iridium.png",
+      codigo_interno: "456FG",
     },
     {
       nombre: "Carenado Frontal Honda CBR",
@@ -322,6 +327,7 @@ export const initialData: SeedData = {
       color: "Negro",
       marca: "Honda",
       imagen: "carenado-frontal-honda-cbr.png",
+      codigo_interno: "213FH",
     },
     {
       nombre: "Freno de Disco Delantero Yamaha",
@@ -334,6 +340,7 @@ export const initialData: SeedData = {
       color: "Negro",
       marca: "Yamaha",
       imagen: "freno-de-disco-delantero-yamaha.png",
+      codigo_interno: "213FB",
     },
     {
       nombre: "Espejo Retrovisor Kawasaki Ninja",
@@ -346,6 +353,7 @@ export const initialData: SeedData = {
       color: "Negro",
       marca: "Kawasaki",
       imagen: "espejo-retrovisor-kawasaki-ninja.png",
+      codigo_interno: "213FJ",
     },
     {
       nombre: "Cubre Cadena Suzuki GSX",
@@ -358,6 +366,7 @@ export const initialData: SeedData = {
       color: "Gris",
       marca: "Suzuki",
       imagen: "cubre-cadena-suzuki-gsx.png",
+      codigo_interno: "213FL",
     },
     {
       nombre: "Filtro de Aire Honda CB300",
@@ -370,6 +379,7 @@ export const initialData: SeedData = {
       color: "Rojo",
       marca: "Honda",
       imagen: "filtro-de-aire-honda-cb300.png",
+      codigo_interno: "213FP",
     },
     {
       nombre: "Caballete Central KTM Duke",
@@ -382,6 +392,7 @@ export const initialData: SeedData = {
       color: "Naranja",
       marca: "KTM",
       imagen: "caballete-central-ktm-duke.png",
+      codigo_interno: "213AH",
     },
     {
       nombre: "Manillar Yamaha MT-07",
@@ -394,6 +405,7 @@ export const initialData: SeedData = {
       color: "Negro",
       marca: "Yamaha",
       imagen: "manillar-yamaha-mt07.png",
+      codigo_interno: "213QH",
     },
     {
       nombre: "Pastillas de Freno Trasero Suzuki",
@@ -407,6 +419,7 @@ export const initialData: SeedData = {
       color: "Negro",
       marca: "Suzuki",
       imagen: "pastillas-de-freno-trasero-suzuki.png",
+      codigo_interno: "213FQ",
     },
     {
       nombre: "Cubierta Pirelli Diablo Rosso II",
@@ -419,6 +432,7 @@ export const initialData: SeedData = {
       color: "Negro",
       marca: "Pirelli",
       imagen: "cubierta-pirelli-diablo-rosso-ii.png",
+      codigo_interno: "215FH",
     },
     {
       nombre: "Tapón de Aceite Kawasaki",
@@ -431,6 +445,7 @@ export const initialData: SeedData = {
       color: "Verde",
       marca: "Kawasaki",
       imagen: "tapon-de-aceite-kawasaki.png",
+      codigo_interno: "211FH",
     },
     {
       nombre: "Llave de Impacto Honda",
@@ -443,6 +458,7 @@ export const initialData: SeedData = {
       color: "Rojo",
       marca: "Honda",
       imagen: "llave-de-impacto-honda.png",
+      codigo_interno: "210FH",
     },
     {
       nombre: "Sistema de Escape Akrapovic",
@@ -456,6 +472,7 @@ export const initialData: SeedData = {
       color: "Negro",
       marca: "Akrapovic",
       imagen: "sistema-de-escape-akrapovic.png",
+      codigo_interno: "AK001",
     },
     {
       nombre: "Toma de Aire KTM",
@@ -469,6 +486,7 @@ export const initialData: SeedData = {
       color: "Transparente",
       marca: "KTM",
       imagen: "toma-de-aire-ktm.png",
+      codigo_interno: "KT002",
     },
     {
       nombre: "Lubricante Motul 300V",
@@ -482,6 +500,7 @@ export const initialData: SeedData = {
       color: "Amarillo",
       marca: "Motul",
       imagen: "lubricante-motul-300v.png",
+      codigo_interno: "MT003",
     },
     {
       nombre: "Freno de Disco Trasero Suzuki",
@@ -494,6 +513,7 @@ export const initialData: SeedData = {
       color: "Negro",
       marca: "Suzuki",
       imagen: "freno-de-disco-trasero-suzuki.png",
+      codigo_interno: "SZ004",
     },
     {
       nombre: "Carenado Completo Kawasaki ZX-6R",
@@ -506,6 +526,7 @@ export const initialData: SeedData = {
       color: "Verde",
       marca: "Kawasaki",
       imagen: "carenado-completo-kawasaki-zx6r.png",
+      codigo_interno: "KW005",
     },
     {
       nombre: "Cámara de Aire Pirelli",
@@ -518,6 +539,7 @@ export const initialData: SeedData = {
       color: "Negro",
       marca: "Pirelli",
       imagen: "camara-de-aire-pirelli.png",
+      codigo_interno: "PR006",
     },
     {
       nombre: "Kit de Herramientas Honda",
@@ -531,6 +553,7 @@ export const initialData: SeedData = {
       color: "Negro",
       marca: "Honda",
       imagen: "kit-de-herramientas-honda.png",
+      codigo_interno: "HN007",
     },
     {
       nombre: "Intercomunicador Bluetooth Sena",
@@ -544,6 +567,7 @@ export const initialData: SeedData = {
       color: "Negro",
       marca: "Sena",
       imagen: "intercomunicador-bluetooth-sena.png",
+      codigo_interno: "SN008",
     },
     {
       nombre: "Frenos de Disco Galfer",
@@ -557,6 +581,7 @@ export const initialData: SeedData = {
       color: "Rojo",
       marca: "Galfer",
       imagen: "frenos-de-disco-galfer.png",
+      codigo_interno: "GF009",
     },
     {
       nombre: "Casco Integral HJC",
@@ -570,6 +595,7 @@ export const initialData: SeedData = {
       color: "Blanco",
       marca: "HJC",
       imagen: "casco-integral-hjc.png",
+      codigo_interno: "HJ010",
     },
   ],
 };

@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import {
   LayoutDashboard,
@@ -98,7 +100,8 @@ const layout = async ({ children }: { children: React.ReactNode }) => {
       <div className="flex flex-1">
         {/* Sidebar */}
         <NavMenu />
-        {children}
+        <main className="flex-1 p-6">{children}</main>
+        <ToastContainer className="text-black text-sm" />
       </div>
       {/* Footer */}
       <footer className="bg-gray-100 border-t">
