@@ -20,6 +20,7 @@ import {
   TableRow,
   Table,
 } from "@/components/ui/table";
+import { useSaleStore } from "@/store/sale/sale-store";
 import { type Venta } from "@/types";
 
 import React, { KeyboardEventHandler, useState } from "react";
@@ -52,13 +53,11 @@ const defaultVenta: Venta = {
 export const DialogNewSale = ({ children }: Props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const [venta, setVenta] = useState<Venta>(defaultVenta);
+  const { fecha, numeracion, subTotal, iva, total, productItems } =
+    useSaleStore((state) => state.getSummaryInformation());
 
-  console.log(venta);
-  // Función para agregar una nueva fila de producto
+  const addProductToSale = useSaleStore((state) => state.addProductToSale);
 
-  // Función para manejar cambios en la tabla de productos
-  //const handleProductoChange = (index, e) => {};
   const handleKeydown: KeyboardEventHandler<HTMLInputElement> = async (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -66,22 +65,8 @@ export const DialogNewSale = ({ children }: Props) => {
       const value = input.value;
       const producto = await getProductByID(value);
       if (producto) {
-        setVenta({
-          ...venta,
-          productos: [
-            ...venta.productos,
-            {
-              id: "",
-              ventaId: "",
-              productoId: "",
-              cantidad: 1,
-              precio: 0,
-              iva: 0,
-              total: 0,
-              producto: producto,
-            },
-          ],
-        });
+        addProductToSale(producto);
+        input.value = "";
       }
     }
   };
@@ -109,7 +94,7 @@ export const DialogNewSale = ({ children }: Props) => {
                     id="fecha"
                     type="date"
                     required
-                    defaultValue={venta.fecha.toISOString().slice(0, 10)}
+                    defaultValue={fecha.toISOString().slice(0, 10)}
                   />
                 </div>
                 <div>
@@ -119,7 +104,7 @@ export const DialogNewSale = ({ children }: Props) => {
                     type="text"
                     className="w-full p-2 border"
                     required
-                    defaultValue={venta.numeracion}
+                    defaultValue={numeracion}
                   />
                 </div>
                 <div>
@@ -184,40 +169,42 @@ export const DialogNewSale = ({ children }: Props) => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {venta.productos.map(({ producto, cantidad }, index) => (
-                      <TableRow key={index}>
-                        <TableCell>
-                          <Input
-                            variant="sm"
-                            name="codigo"
-                            defaultValue={producto.codigo_interno!}
-                            onChange={(e) => handleProductoChange(index, e)}
-                            className="w-full p-2"
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <Input
-                            variant="sm"
-                            name="nombre"
-                            defaultValue={producto.nombre!}
-                            onChange={(e) => handleProductoChange(index, e)}
-                            className="w-full p-2"
-                          />
-                        </TableCell>
-                        <TableCell>{producto.precio || "$0.00"}</TableCell>
-                        <TableCell>
-                          <Input
-                            variant="sm"
-                            name="cantidad"
-                            defaultValue={cantidad}
-                            onChange={(e) => handleProductoChange(index, e)}
-                            className="w-full p-2"
-                          />
-                        </TableCell>
-                        <TableCell>$0.00</TableCell>
-                        <TableCell>21%</TableCell>
-                      </TableRow>
-                    ))}
+                    {productItems.map(
+                      ({ producto, cantidad, total }, index) => (
+                        <TableRow key={index}>
+                          <TableCell>
+                            <Input
+                              variant="sm"
+                              name="codigo"
+                              defaultValue={producto.codigo_interno!}
+                              onChange={(e) => handleProductoChange(index, e)}
+                              className="w-full p-2"
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Input
+                              variant="sm"
+                              name="nombre"
+                              defaultValue={producto.nombre!}
+                              onChange={(e) => handleProductoChange(index, e)}
+                              className="w-full p-2"
+                            />
+                          </TableCell>
+                          <TableCell>{producto.precio || "$0.00"}</TableCell>
+                          <TableCell>
+                            <Input
+                              variant="sm"
+                              name="cantidad"
+                              defaultValue={cantidad}
+                              onChange={(e) => handleProductoChange(index, e)}
+                              className="w-full p-2"
+                            />
+                          </TableCell>
+                          <TableCell>{total}</TableCell>
+                          <TableCell>21%</TableCell>
+                        </TableRow>
+                      )
+                    )}
 
                     <TableRow>
                       <TableCell>
@@ -256,15 +243,9 @@ export const DialogNewSale = ({ children }: Props) => {
               <h2 className="text-lg font-bold">Resumen</h2>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="neto">Neto</Label>
-                  <div id="neto" className="w-full p-1 border bg-gray-100">
-                    $0.00
-                  </div>
-                </div>
-                <div>
                   <Label htmlFor="subTotal">Sub Total</Label>
                   <div id="subTotal" className="w-full p-1 border bg-gray-100">
-                    $0.00
+                    ${subTotal}
                   </div>
                 </div>
                 <div>
@@ -278,13 +259,13 @@ export const DialogNewSale = ({ children }: Props) => {
                 <div>
                   <Label htmlFor="iva">IVA</Label>
                   <div id="iva" className="w-full p-1 border bg-gray-100">
-                    $0.00
+                    ${iva}
                   </div>
                 </div>
                 <div>
                   <Label htmlFor="total">Total</Label>
                   <div id="total" className="w-full p-1 border bg-gray-100">
-                    $0.00
+                    ${total}
                   </div>
                 </div>
               </div>
