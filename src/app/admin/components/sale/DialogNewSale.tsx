@@ -192,7 +192,6 @@ export const DialogNewSale = ({ children }: Props) => {
                               variant="sm"
                               name="codigo"
                               defaultValue={producto.codigo_interno!}
-                              onChange={(e) => handleProductoChange(index, e)}
                               className="w-full p-2"
                             />
                           </TableCell>
@@ -201,7 +200,6 @@ export const DialogNewSale = ({ children }: Props) => {
                               variant="sm"
                               name="nombre"
                               defaultValue={producto.nombre!}
-                              onChange={(e) => handleProductoChange(index, e)}
                               className="w-full p-2"
                             />
                           </TableCell>
