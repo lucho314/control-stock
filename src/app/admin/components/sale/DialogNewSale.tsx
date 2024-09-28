@@ -21,7 +21,7 @@ import {
   Table,
 } from "@/components/ui/table";
 import { useSaleStore } from "@/store/sale/sale-store";
-import { type Venta } from "@/types";
+import { Producto, type Venta } from "@/types";
 
 import React, { KeyboardEventHandler, useState } from "react";
 
@@ -57,6 +57,9 @@ export const DialogNewSale = ({ children }: Props) => {
     useSaleStore((state) => state.getSummaryInformation());
 
   const addProductToSale = useSaleStore((state) => state.addProductToSale);
+  const updateProductQuantity = useSaleStore(
+    (state) => state.updateProductQuantity
+  );
 
   const handleKeydown: KeyboardEventHandler<HTMLInputElement> = async (e) => {
     if (e.key === "Enter") {
@@ -69,6 +72,18 @@ export const DialogNewSale = ({ children }: Props) => {
         input.value = "";
       }
     }
+  };
+
+  const handleProductQuantityChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    produc: Producto
+  ) => {
+    const value = e.target.value;
+    const quantity = parseInt(value, 10);
+    if (isNaN(quantity)) return;
+    if (quantity === 0) return;
+
+    updateProductQuantity(produc, quantity);
   };
 
   return (
@@ -196,7 +211,9 @@ export const DialogNewSale = ({ children }: Props) => {
                               variant="sm"
                               name="cantidad"
                               defaultValue={cantidad}
-                              onChange={(e) => handleProductoChange(index, e)}
+                              onChange={(e) =>
+                                handleProductQuantityChange(e, producto)
+                              }
                               className="w-full p-2"
                             />
                           </TableCell>

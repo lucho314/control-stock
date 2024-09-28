@@ -51,21 +51,9 @@ export const useSaleStore = create<State>()((set, get) => ({
       producto: product,
     };
 
-    const subTotal = +(
-      Number(sale.subTotal) + Number(producVenta.total)
-    ).toFixed(2);
-    const iva = +(
-      Number(sale.iva) +
-      (Number(producVenta.iva) * producVenta.total) / 100
-    ).toFixed(2);
-    const total = +(subTotal + iva).toFixed(2);
-
     set({
       sale: {
         ...sale,
-        subTotal,
-        iva,
-        total,
         productos: [...sale.productos, producVenta],
       },
     });
@@ -88,11 +76,13 @@ export const useSaleStore = create<State>()((set, get) => ({
     const { sale } = get();
 
     const productos = sale.productos.map((p) => {
+      const { producto } = p;
+
       if (p.producto.id === product.id) {
         return {
           ...p,
           cantidad: quantity,
-          total: quantity * p.precio,
+          total: quantity * Number(producto.precio),
         };
       }
       return p;
@@ -108,7 +98,8 @@ export const useSaleStore = create<State>()((set, get) => ({
   getSummaryInformation: () => {
     const { sale } = get();
 
-    const { fecha, numeracion, total, subTotal, iva } = sale;
+    const { fecha, numeracion } = sale;
+    const { total, subTotal, iva } = calcullarTotales(sale.productos);
 
     const productItems = sale.productos;
 
@@ -122,3 +113,22 @@ export const useSaleStore = create<State>()((set, get) => ({
     };
   },
 }));
+
+function calcullarTotales(productos: ProductoVenta[]) {
+  const subTotal = +productos
+    .reduce((acc, p) => Number(acc) + Number(p.total), 0)
+    .toFixed(2);
+  const iva = +productos
+    .reduce(
+      (acc, p) => Number(acc) + (Number(p.iva) * Number(p.total)) / 100,
+      0
+    )
+    .toFixed(2);
+  const total = +(Number(subTotal) + Number(iva)).toFixed(2);
+
+  return {
+    subTotal,
+    iva,
+    total,
+  };
+}
