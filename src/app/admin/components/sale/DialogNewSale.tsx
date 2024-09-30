@@ -52,6 +52,7 @@ const defaultVenta: Venta = {
 
 export const DialogNewSale = ({ children }: Props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const { fecha, numeracion, subTotal, iva, total, productItems } =
     useSaleStore((state) => state.getSummaryInformation());
@@ -64,12 +65,14 @@ export const DialogNewSale = ({ children }: Props) => {
   const handleKeydown: KeyboardEventHandler<HTMLInputElement> = async (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
+      setLoading(true);
       const input = e.target as HTMLInputElement;
       const value = input.value;
       const producto = await getProductByID(value);
       if (producto) {
         addProductToSale(producto);
         input.value = "";
+        setLoading(false);
       }
     }
   };
@@ -228,6 +231,7 @@ export const DialogNewSale = ({ children }: Props) => {
                           name="codigo"
                           className="w-full p-2"
                           onKeyDown={handleKeydown}
+                          loading={loading}
                         />
                       </TableCell>
                       <TableCell>
