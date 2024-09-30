@@ -23,35 +23,16 @@ import {
 import { useSaleStore } from "@/store/sale/sale-store";
 import { Producto, type Venta } from "@/types";
 
-import React, { KeyboardEventHandler, useState } from "react";
+import React, { KeyboardEventHandler, useRef, useState } from "react";
 
 interface Props {
   children?: React.ReactNode;
 }
 
-const defaultVenta: Venta = {
-  id: "",
-  numeracion: "",
-  fecha: new Date(),
-  numero: "",
-  formaDePago: "EFECTIVO",
-  clienteId: "",
-  neto: 0,
-  subTotal: 0,
-  bonificacion: null,
-  iva: 0,
-  total: 0,
-  cliente: {
-    nombre: "generico",
-    direccion: "generico",
-    email: "",
-    telefono: "",
-  },
-  productos: [],
-};
-
 export const DialogNewSale = ({ children }: Props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const cantidadInputRef = useRef<HTMLInputElement>(null);
 
   const { fecha, numeracion, subTotal, iva, total, productItems } =
     useSaleStore((state) => state.getSummaryInformation());
@@ -60,16 +41,24 @@ export const DialogNewSale = ({ children }: Props) => {
   const updateProductQuantity = useSaleStore(
     (state) => state.updateProductQuantity
   );
+  const updateBonificacion = useSaleStore((state) => state.updateBonificacion);
 
   const handleKeydown: KeyboardEventHandler<HTMLInputElement> = async (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
+      setLoading(true);
       const input = e.target as HTMLInputElement;
       const value = input.value;
       const producto = await getProductByID(value);
       if (producto) {
         addProductToSale(producto);
         input.value = "";
+        setLoading(false);
+
+        // Focus on the quantity input despues de ml
+        setTimeout(() => {
+          cantidadInputRef.current?.focus();
+        }, 200);
       }
     }
   };
@@ -120,6 +109,7 @@ export const DialogNewSale = ({ children }: Props) => {
                     className="w-full p-2 border"
                     required
                     defaultValue={numeracion}
+                    autoFocus
                   />
                 </div>
                 <div>
@@ -180,7 +170,7 @@ export const DialogNewSale = ({ children }: Props) => {
                       <TableHead>Precio </TableHead>
                       <TableHead>Cantidad </TableHead>
                       <TableHead>Total </TableHead>
-                      <TableHead>IVA </TableHead>
+                      {/* <TableHead>IVA </TableHead> */}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -209,14 +199,16 @@ export const DialogNewSale = ({ children }: Props) => {
                               variant="sm"
                               name="cantidad"
                               defaultValue={cantidad}
+                              ref={cantidadInputRef}
                               onChange={(e) =>
                                 handleProductQuantityChange(e, producto)
                               }
+                              type="number"
                               className="w-full p-2"
                             />
                           </TableCell>
                           <TableCell>{total}</TableCell>
-                          <TableCell>21%</TableCell>
+                          {/* <TableCell>21%</TableCell> */}
                         </TableRow>
                       )
                     )}
@@ -228,6 +220,7 @@ export const DialogNewSale = ({ children }: Props) => {
                           name="codigo"
                           className="w-full p-2"
                           onKeyDown={handleKeydown}
+                          loading={loading}
                         />
                       </TableCell>
                       <TableCell>
@@ -243,10 +236,11 @@ export const DialogNewSale = ({ children }: Props) => {
                           variant="sm"
                           name="cantidad"
                           className="w-full p-2"
+                          id="cantidad"
                         />
                       </TableCell>
                       <TableCell>$0.00</TableCell>
-                      <TableCell>21%</TableCell>
+                      {/* <TableCell>21%</TableCell> */}
                     </TableRow>
                   </TableBody>
                 </Table>
@@ -264,19 +258,20 @@ export const DialogNewSale = ({ children }: Props) => {
                   </div>
                 </div>
                 <div>
-                  <Label htmlFor="bonificacion">Bonificación</Label>
+                  <Label htmlFor="bonificacion">% Bonificación</Label>
                   <Input
                     id="bonificacion"
-                    type="text"
+                    type="number"
                     className="w-full p-1 border"
+                    onChange={(e) => updateBonificacion(+e.target.value)}
                   />
                 </div>
-                <div>
+                {/* <div>
                   <Label htmlFor="iva">IVA</Label>
                   <div id="iva" className="w-full p-1 border bg-gray-100">
                     ${iva}
                   </div>
-                </div>
+                </div> */}
                 <div>
                   <Label htmlFor="total">Total</Label>
                   <div id="total" className="w-full p-1 border bg-gray-100">

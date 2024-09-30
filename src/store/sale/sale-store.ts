@@ -15,6 +15,8 @@ interface State {
     total: number;
     productItems: ProductoVenta[];
   };
+
+  updateBonificacion: (bonificacion: number) => void;
 }
 
 export const useSaleStore = create<State>()((set, get) => ({
@@ -98,8 +100,11 @@ export const useSaleStore = create<State>()((set, get) => ({
   getSummaryInformation: () => {
     const { sale } = get();
 
-    const { fecha, numeracion } = sale;
-    const { total, subTotal, iva } = calcullarTotales(sale.productos);
+    const { fecha, numeracion, bonificacion } = sale;
+    const { total, subTotal, iva } = calcullarTotales(
+      sale.productos,
+      bonificacion || 0
+    );
 
     const productItems = sale.productos;
 
@@ -112,23 +117,37 @@ export const useSaleStore = create<State>()((set, get) => ({
       productItems,
     };
   },
+
+  updateBonificacion: (bonificacion: number) => {
+    const { sale } = get();
+
+    set({
+      sale: {
+        ...sale,
+        bonificacion,
+      },
+    });
+  },
 }));
 
-function calcullarTotales(productos: ProductoVenta[]) {
+function calcullarTotales(productos: ProductoVenta[], bonificacion: number) {
   const subTotal = +productos
     .reduce((acc, p) => Number(acc) + Number(p.total), 0)
     .toFixed(2);
-  const iva = +productos
-    .reduce(
-      (acc, p) => Number(acc) + (Number(p.iva) * Number(p.total)) / 100,
-      0
-    )
-    .toFixed(2);
-  const total = +(Number(subTotal) + Number(iva)).toFixed(2);
+  // const iva = +productos
+  //   .reduce(
+  //     (acc, p) => Number(acc) + (Number(p.iva) * Number(p.total)) / 100,
+  //     0
+  //   )
+  //   .toFixed(2);
+  let total = +Number(subTotal).toFixed(2);
+
+  if (bonificacion) {
+    total = +(total - (total * bonificacion) / 100).toFixed(2);
+  }
 
   return {
     subTotal,
-    iva,
     total,
   };
 }
