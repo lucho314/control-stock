@@ -19,7 +19,7 @@ const providerSchema = z.object({
   numeracion: z.string(),
   subTotal: z.number(),
   total: z.number(),
-  bonificacion: z.number().optional(),
+  bonificacion: z.number().nullable().optional(),
   formaDePago: z.string(),
   productItems: z.array(
     z.object({
@@ -72,6 +72,11 @@ export const createSale = async (venta: sumarySale) => {
         },
       }),
     ]);
+
+    if (transaction) {
+      revalidatePath("/admin/sale");
+      return { ok: true };
+    }
   } catch (error) {
     console.log(error);
   }

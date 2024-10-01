@@ -7,16 +7,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ordenes_de_venta as ordenesVenta } from "@prisma/client";
+import { venta } from "@prisma/client";
+import { formatDate } from "@/utils/formatDate";
+import { ButtonActionTableSale } from "./ButtonActionTableSale";
 
 interface Props {
-  sales?: ordenesVenta[];
+  sales?: venta[];
 }
 
 export const TableSale = ({ sales }: Props) => {
   return (
     <Table>
-      <TableCaption>Lista de proveedores.</TableCaption>
+      <TableCaption>Lista de ventas.</TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead>Numero</TableHead>
@@ -26,14 +28,16 @@ export const TableSale = ({ sales }: Props) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {/* {sales.map((sale) => ( */}
-        <TableRow>
-          <TableCell className="font-medium">123213</TableCell>
-          <TableCell>27-09-2024</TableCell>
-          <TableCell>$2000</TableCell>
-          <TableCell>{/* <ButtonActionTable provider={prov} /> */}</TableCell>
-        </TableRow>
-        {/* ))} */}
+        {sales?.map((sale) => (
+          <TableRow key={sale.id}>
+            <TableCell className="font-medium">{sale.numeracion}</TableCell>
+            <TableCell>{formatDate(sale.fecha)}</TableCell>
+            <TableCell>{sale.total}</TableCell>
+            <TableCell>
+              <ButtonActionTableSale sale={sale} />
+            </TableCell>
+          </TableRow>
+        ))}
       </TableBody>
     </Table>
   );
