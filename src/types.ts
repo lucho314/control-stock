@@ -1,5 +1,6 @@
 import {
   clientes,
+  FormaDePago,
   productos,
   proveedores,
   venta,
@@ -26,4 +27,14 @@ export type Venta = Omit<venta, "id"> & {
   id?: string;
   productos: ProductoVenta[];
   cliente: Cliente;
+};
+
+export type sumarySale = {
+  fecha: Date;
+  numeracion: string;
+  subTotal: number;
+  total: number;
+  productItems: ProductoVenta[];
+  formaDePago: FormaDePago;
+  bonificacion: number | null;
 };

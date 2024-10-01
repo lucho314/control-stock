@@ -1,4 +1,5 @@
-import { Producto, ProductoVenta, Venta } from "@/types";
+import { Producto, ProductoVenta, sumarySale, Venta } from "@/types";
+import { FormaDePago } from "@prisma/client";
 import { create } from "zustand";
 
 interface State {
@@ -7,14 +8,9 @@ interface State {
   addProductToSale: (product: any) => void;
   removeProductFromSale: (product: any) => void;
   updateProductQuantity: (product: any, quantity: number) => void;
-  getSummaryInformation: () => {
-    fecha: Date;
-    numeracion: string;
-    subTotal: number;
-    iva: number;
-    total: number;
-    productItems: ProductoVenta[];
-  };
+  setNumeration: (numeration: string) => void;
+  setFormaDePago: (formaDePago: FormaDePago) => void;
+  getSummaryInformation: () => sumarySale;
 
   updateBonificacion: (bonificacion: number) => void;
 }
@@ -100,8 +96,8 @@ export const useSaleStore = create<State>()((set, get) => ({
   getSummaryInformation: () => {
     const { sale } = get();
 
-    const { fecha, numeracion, bonificacion } = sale;
-    const { total, subTotal, iva } = calcullarTotales(
+    const { fecha, numeracion, bonificacion, formaDePago } = sale;
+    const { total, subTotal } = calcullarTotales(
       sale.productos,
       bonificacion || 0
     );
@@ -112,10 +108,32 @@ export const useSaleStore = create<State>()((set, get) => ({
       fecha,
       numeracion,
       subTotal,
-      iva,
       total,
       productItems,
+      formaDePago,
+      bonificacion,
     };
+  },
+
+  setNumeration: (numeracion: string) => {
+    const { sale } = get();
+
+    set({
+      sale: {
+        ...sale,
+        numeracion,
+      },
+    });
+  },
+  setFormaDePago: (formaDePago: FormaDePago) => {
+    const { sale } = get();
+
+    set({
+      sale: {
+        ...sale,
+        formaDePago,
+      },
+    });
   },
 
   updateBonificacion: (bonificacion: number) => {

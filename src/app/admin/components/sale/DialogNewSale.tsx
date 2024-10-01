@@ -1,5 +1,6 @@
 "use client";
 import { getProductByID } from "@/actions";
+import { createSale } from "@/actions/sale/create-sale";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -21,7 +22,8 @@ import {
   Table,
 } from "@/components/ui/table";
 import { useSaleStore } from "@/store/sale/sale-store";
-import { Producto, type Venta } from "@/types";
+import { Producto, sumarySale, type Venta } from "@/types";
+import { FormaDePago } from "@prisma/client";
 
 import React, { KeyboardEventHandler, useRef, useState } from "react";
 
@@ -34,14 +36,29 @@ export const DialogNewSale = ({ children }: Props) => {
   const [loading, setLoading] = useState(false);
   const cantidadInputRef = useRef<HTMLInputElement>(null);
 
-  const { fecha, numeracion, subTotal, iva, total, productItems } =
-    useSaleStore((state) => state.getSummaryInformation());
+  const {
+    fecha,
+    numeracion,
+    subTotal,
+    total,
+    productItems,
+    formaDePago,
+    bonificacion,
+  } = useSaleStore((state) => state.getSummaryInformation());
 
-  const addProductToSale = useSaleStore((state) => state.addProductToSale);
-  const updateProductQuantity = useSaleStore(
-    (state) => state.updateProductQuantity
-  );
-  const updateBonificacion = useSaleStore((state) => state.updateBonificacion);
+  const {
+    setFormaDePago,
+    setNumeracion,
+    addProductToSale,
+    updateBonificacion,
+    updateProductQuantity,
+  } = useSaleStore((state) => ({
+    setFormaDePago: state.setFormaDePago,
+    setNumeracion: state.setNumeration,
+    addProductToSale: state.addProductToSale,
+    updateBonificacion: state.updateBonificacion,
+    updateProductQuantity: state.updateProductQuantity,
+  }));
 
   const handleKeydown: KeyboardEventHandler<HTMLInputElement> = async (e) => {
     if (e.key === "Enter") {
@@ -75,6 +92,22 @@ export const DialogNewSale = ({ children }: Props) => {
     updateProductQuantity(produc, quantity);
   };
 
+  const saveSale = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const sumarySale: sumarySale = {
+      fecha,
+      numeracion,
+      subTotal,
+      total,
+      productItems,
+      formaDePago,
+      bonificacion,
+    };
+
+    //console.log(sumarySale);
+    await createSale(sumarySale);
+  };
+
   return (
     <>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -87,7 +120,7 @@ export const DialogNewSale = ({ children }: Props) => {
               cuando termine.
             </DialogDescription>
           </DialogHeader>
-          <form>
+          <form onSubmit={(e) => saveSale(e)}>
             {/* Sección de Información de Venta */}
             <div className="py-4">
               <h2 className="text-lg font-bold">Información de la Venta</h2>
@@ -110,11 +143,19 @@ export const DialogNewSale = ({ children }: Props) => {
                     required
                     defaultValue={numeracion}
                     autoFocus
+                    onChange={(e) => setNumeracion(e.target.value)}
                   />
                 </div>
                 <div>
                   <Label htmlFor="formaPago">Forma de Pago</Label>
-                  <select id="formaPago" className="w-full p-2 border" required>
+                  <select
+                    id="formaPago"
+                    className="w-full p-2 border"
+                    required
+                    onChange={(e) =>
+                      setFormaDePago(e.target.value as FormaDePago)
+                    }
+                  >
                     <option defaultValue="EFECTIVO">Efectivo</option>
                     <option defaultValue="TARJETA">Tarjeta</option>
                     <option defaultValue="TRANFERENCIA">Transferencia</option>
@@ -263,6 +304,7 @@ export const DialogNewSale = ({ children }: Props) => {
                     id="bonificacion"
                     type="number"
                     className="w-full p-1 border"
+                    defaultValue={bonificacion || ""}
                     onChange={(e) => updateBonificacion(+e.target.value)}
                   />
                 </div>

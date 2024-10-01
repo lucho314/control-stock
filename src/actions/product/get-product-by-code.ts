@@ -12,7 +12,10 @@ export const getProductByID = async (code: string) => {
 
     if (!product) return null;
 
-    return JSON.parse(JSON.stringify(product));
+    let producto = JSON.parse(JSON.stringify(product));
+
+    producto.precio = parseFloat(producto.precio);
+    return producto;
   } catch (error) {
     console.log(error);
     throw new Error("Error al obtener producto por ID");
