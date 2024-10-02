@@ -16,7 +16,7 @@ docker compose up -d
 
 ```sh {"id":"01J8QV9WSK0PJBGG2THF57WGNM"}
 npx prisma init
-npx prisma migrate dev
+npm run migrate
 npx prisma generate
 
 ```
