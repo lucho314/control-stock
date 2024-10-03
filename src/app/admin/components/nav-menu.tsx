@@ -40,6 +40,7 @@ const NavMenu = () => {
             Productos
           </Button>
         </Link>
+        <Link href="/admin/sale">
         <Button
           variant="ghost"
           className={`w-full justify-start ${
@@ -49,6 +50,7 @@ const NavMenu = () => {
           <ShoppingCart className="mr-2 h-4 w-4" />
           Ventas
         </Button>
+        </Link>
         <Button
           variant="ghost"
           className={`w-full justify-start ${
