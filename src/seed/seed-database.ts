@@ -44,6 +44,7 @@ async function main() {
 
   await prisma.clientes.create({
     data: {
+      id:"68c1fb15-b85f-4028-9e7b-fd4b5f1a448e",
       nombre: "cliente generico",
       email: "clienteA@example.com",
       telefono: "123456789",
