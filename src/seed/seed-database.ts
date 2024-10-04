@@ -3,6 +3,8 @@ import prisma from "../lib/prisma";
 import { initialData } from "./seed";
 
 async function main() {
+  await prisma.venta_producto.deleteMany();
+  await prisma.venta.deleteMany();
   await prisma.recepciones_de_productos.deleteMany();
   await prisma.ordenes_de_compra.deleteMany();
   await prisma.inventario.deleteMany();
@@ -44,7 +46,7 @@ async function main() {
 
   await prisma.clientes.create({
     data: {
-      id:"68c1fb15-b85f-4028-9e7b-fd4b5f1a448e",
+      id: "68c1fb15-b85f-4028-9e7b-fd4b5f1a448e",
       nombre: "cliente generico",
       email: "clienteA@example.com",
       telefono: "123456789",
