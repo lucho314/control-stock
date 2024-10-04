@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Edit, Trash2 } from "lucide-react";
 import AlertDialogComponent from "./alert-dialog";
+import DialogNuevoProducto from "./dialog-nuevo-producto";
 
 interface TableProductosProps {
   productos: any;
@@ -42,9 +43,11 @@ const TableProductos = ({ productos, deleteProduct }: TableProductosProps) => {
             <TableCell>${producto.precio}</TableCell>
             <TableCell>{producto.inStock}</TableCell>
             <TableCell className="flex justify-evenly">
-              <Button variant="ghost" size="icon">
-                <Edit className="h-4 w-4" />
-              </Button>
+              <DialogNuevoProducto producto={producto}>
+                <Button variant="secondary" size="icon">
+                  <Edit className="h-4 w-4" />
+                </Button>
+              </DialogNuevoProducto>
               {/*<Button
                 variant="destructive"
                 size="icon"
