@@ -11,30 +11,28 @@ export async function GET(request: Request) {
     );
   }
 
-  return NextResponse.json({ ventaId });
+  try {
+    const pdfBuffer = await generarReciboDeVenta(ventaId);
 
-  // try {
-  //   const pdfBuffer = await generarReciboDeVenta(ventaId);
+    if (!pdfBuffer) {
+      return NextResponse.json(
+        { error: "Venta no encontrada" },
+        { status: 404 }
+      );
+    }
 
-  //   if (!pdfBuffer) {
-  //     return NextResponse.json(
-  //       { error: "Venta no encontrada" },
-  //       { status: 404 }
-  //     );
-  //   }
-
-  //   return new NextResponse(pdfBuffer, {
-  //     status: 200,
-  //     headers: {
-  //       "Content-Type": "application/pdf",
-  //       "Content-Disposition": `attachment; filename=venta-${ventaId}.pdf`,
-  //     },
-  //   });
-  // } catch (error) {
-  //   console.error(error);
-  //   return NextResponse.json(
-  //     { error: "Error interno del servidor" },
-  //     { status: 500 }
-  //   );
-  // }
+    return new NextResponse(pdfBuffer, {
+      status: 200,
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename=venta-${ventaId}.pdf`,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { error: "Error interno del servidor" },
+      { status: 500 }
+    );
+  }
 }
