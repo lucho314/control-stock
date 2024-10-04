@@ -75,10 +75,11 @@ const DialogNewProvider = ({ provider, children }: Props) => {
           </DialogHeader>
           <form onSubmit={handleNuevoProducto}>
             <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
+              <div className="sm:col-span-6">
                 <Label htmlFor="nombre" className="text-right">
                   Nombre
                 </Label>
+
                 <Input
                   id="nombre"
                   required
@@ -89,7 +90,7 @@ const DialogNewProvider = ({ provider, children }: Props) => {
                   }}
                 />
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
+              <div className="sm:col-span-6">
                 <Label htmlFor="telefono" className="text-right">
                   Telefono
                 </Label>
@@ -106,7 +107,7 @@ const DialogNewProvider = ({ provider, children }: Props) => {
                   }}
                 />
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
+              <div className="sm:col-span-6">
                 <Label htmlFor="email" className="text-right">
                   Email
                 </Label>
@@ -120,7 +121,7 @@ const DialogNewProvider = ({ provider, children }: Props) => {
                   }}
                 />
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
+              <div className="sm:col-span-6">
                 <Label htmlFor="direccion" className="text-right">
                   Direccion
                 </Label>

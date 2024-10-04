@@ -3,7 +3,7 @@ const nextConfig = {
     images: {
         remotePatterns: [
             {
-                hostname: 'https://imgs.search.brave.com',
+                hostname: 'imgs.search.brave.com',
             }
         ],
     }
