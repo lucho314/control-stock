@@ -1,6 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
 
 interface Params {
   id: number;
@@ -46,7 +47,7 @@ const ProductPage = async ({ params }: Props) => {
       </Link>
       <div className="grid md:grid-cols-2 gap-8">
         <div>
-          <img
+          <Image
             src={producto.imagen}
             alt={producto.nombre}
             width={400}

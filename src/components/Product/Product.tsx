@@ -34,9 +34,7 @@ export const Product = ({
               href={"/products/" + producto.id}
               className="text-2xl font-bold"
             >
-              <Button className="mt-auto m-1" variant={"warning"}>
-                Actualizar
-              </Button>
+              <Button className="mt-auto m-1">Actualizar</Button>
             </Link>
             <Link
               href={"/products/" + producto.id}

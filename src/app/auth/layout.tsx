@@ -1,17 +1,15 @@
 import { auth } from "@/auth.config";
 import { redirect } from "next/navigation";
 
-interface Props {
-  searchParams: { callbackUrl: string | undefined; error?: string };
+export default async function AdminLayout({
+  children,
+}: {
   children: React.ReactNode;
-}
-
-export default async function RootLayout(props: Props) {
-  const { children, searchParams } = props;
+}) {
   const session = await auth();
 
   if (session) {
-    redirect(searchParams?.callbackUrl || "/");
+    redirect("/admin/dashboard");
   }
 
   return (

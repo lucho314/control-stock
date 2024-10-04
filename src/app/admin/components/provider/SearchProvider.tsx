@@ -24,7 +24,7 @@ export const SearchProvider = ({
     } else {
       router.push(`${urlPush}?q=${query}`);
     }
-  }, [query, router]);
+  }, [query, router, urlPush]);
 
   return (
     <div className="relative mb-4">
