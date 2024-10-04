@@ -1,7 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-        domains: ['imgs.search.brave.com']
+        remotePatterns: [
+            {
+                hostname: 'https://imgs.search.brave.com',
+            }
+        ],
     }
 };
 
