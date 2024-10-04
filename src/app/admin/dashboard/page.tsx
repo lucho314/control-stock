@@ -1,5 +1,3 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -9,18 +7,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-import {
-  LayoutDashboard,
-  Package,
-  ShoppingCart,
-  Users,
-  Settings,
-  LogOut,
-  Menu,
-  Bell,
-  Search,
-} from "lucide-react";
 
 // Datos de ejemplo
 const productos = [
