@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 interface IProducto {
   id: number;
@@ -65,10 +66,12 @@ const Listproducts = () => {
             key={producto.id}
             className="border rounded-lg p-4 flex flex-col"
           >
-            <img
+            <Image
               src={producto.imagen}
               alt={producto.nombre}
               className="w-full h-40 object-cover mb-4 rounded"
+              width={400}
+              height={400}
             />
             <h3 className="text-lg font-semibold mb-2">{producto.nombre}</h3>
             <p className="text-gray-600 mb-4">${producto.precio}</p>
