@@ -13,6 +13,8 @@ interface State {
   getSummaryInformation: () => sumarySale;
 
   updateBonificacion: (bonificacion: number) => void;
+
+  resetState: () => void;
 }
 
 export const useSaleStore = create<State>()((set, get) => ({
@@ -143,6 +145,30 @@ export const useSaleStore = create<State>()((set, get) => ({
       sale: {
         ...sale,
         bonificacion,
+      },
+    });
+  },
+
+  resetState: () => {
+    set({
+      sale: {
+        numeracion: "",
+        fecha: new Date(),
+        numero: "",
+        formaDePago: "EFECTIVO",
+        clienteId: "",
+        neto: 0,
+        subTotal: 0,
+        bonificacion: null,
+        iva: 0,
+        total: 0,
+        cliente: {
+          nombre: "generico",
+          direccion: "generico",
+          email: "",
+          telefono: "",
+        },
+        productos: [],
       },
     });
   },

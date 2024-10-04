@@ -28,7 +28,6 @@ export const DialogNewSale = ({ children }: Props) => {
   const [guardarVenta, setGuardarVenta] = useState(false);
 
   const formRef = React.useRef<HTMLFormElement>(null);
-
   const {
     fecha,
     numeracion,
@@ -38,6 +37,10 @@ export const DialogNewSale = ({ children }: Props) => {
     formaDePago,
     bonificacion,
   } = useSaleStore((state) => state.getSummaryInformation());
+
+  const { resetState } = useSaleStore((state) => ({
+    resetState: state.resetState,
+  }));
 
   const saveSale = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -56,7 +59,7 @@ export const DialogNewSale = ({ children }: Props) => {
     setGuardarVenta(false);
 
     formRef.current?.reset();
-
+    resetState();
     setIsDialogOpen(false);
   };
 
