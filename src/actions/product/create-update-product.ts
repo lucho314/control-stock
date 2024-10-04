@@ -8,42 +8,55 @@ const productSchema = z.object({
   id: z.string().uuid().optional().nullable(),
   nombre: z.string().min(3).max(255),
   descripcion: z.string().min(3).max(255),
-  categoria_id: z.string().min(3).max(255),
-  precio: z.number().min(0),
+  categoria_id: z.string().uuid().optional().nullable(),
+  precio: z.preprocess((val) => parseFloat(val as string), z.number().min(0)),
   codigo_de_barras: z.string().min(3).max(255),
-  proveedor_id: z.string().uuid(),
+  proveedor_id: z.string().uuid().optional().nullable(),
 });
 
-export const createUpdateProduct = async (formData: FormData) => {
+export const createUpdateProduct = async (
+  formData: FormData
+): Promise<{
+  ok: boolean;
+  product?: any;
+  error?: string;
+}> => {
   const data = Object.fromEntries(formData);
-  const productParsed = productSchema.safeParse(data);
+
+  console.log({ data });
+
+  const productParsed = productSchema.safeParse({
+    ...data,
+    precio: parseFloat(data.precio as string), // Conversión explícita a número
+  });
 
   if (!productParsed.success) {
-    console.log(productParsed.error);
-    return { ok: false };
+    console.log("Error en la validación:", productParsed.error);
+    return { ok: false, error: "Error en la validación de datos" };
   }
 
   const product = productParsed.data;
+  const { id, ...rest } = product;
 
-  const { id, proveedor_id, ...rest } = product;
-
-  const productData = {
-    ...rest,
-    proveedor_id: proveedor_id,
-  };
-
-  if (id) {
-    await prisma.productos.update({
-      where: { id },
-      data: productData,
-    });
-  } else {
-    await prisma.productos.create({
-      data: productData,
-    });
+  try {
+    if (id) {
+      const updatedProduct = await prisma.productos.update({
+        where: { id },
+        data: rest,
+      });
+      revalidatePath("/productos");
+      return { ok: true, product: updatedProduct };
+    } else {
+      const newProduct = await prisma.productos.create({
+        data: rest,
+      });
+      revalidatePath("/productos");
+      return { ok: true, product: newProduct };
+    }
+  } catch (error) {
+    console.error("Error al crear/actualizar producto:", error);
+    return { ok: false, error: "Error desconocido" };
   }
-
-  revalidatePath("/productos");
 };
 
 // const uploadImages = async (images: File[]) => {

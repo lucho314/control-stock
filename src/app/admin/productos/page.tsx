@@ -1,10 +1,10 @@
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
 import DialogNuevoProducto from "./components/dialog-nuevo-producto";
 import TableProductos from "./components/table-productos";
 import { Paginacion } from "../components/ui/Pagination";
-import { getPaginatedProducts, deleteProductImage } from "@/actions";
+import { getPaginatedProducts } from "@/actions";
 import { SearchProvider } from "../components/provider/SearchProvider";
+import { Button } from "@/components/ui/button";
+import { PlusCircle } from "lucide-react";
 
 export interface Props {
   searchParams: {
@@ -27,7 +27,12 @@ const ProductosPage = async ({ searchParams }: Props) => {
       <div className="mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Productos</h1>
-          <DialogNuevoProducto />
+          <DialogNuevoProducto>
+            <Button>
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Nuevo Producto
+            </Button>
+          </DialogNuevoProducto>
         </div>
 
         <SearchProvider search={q} urlPush="/admin/productos" />
