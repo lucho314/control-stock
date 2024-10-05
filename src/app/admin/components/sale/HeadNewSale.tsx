@@ -1,6 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useSaleStore } from "@/store/sale/sale-store";
+import { enterAsTab } from "@/utils/enterAsTab";
 import { FormaDePago } from "@prisma/client";
 import React from "react";
 
@@ -14,23 +15,6 @@ export const HeadNewSale = () => {
     setNumeracion: state.setNumeration,
   }));
 
-  const enterAsTab = (e: React.KeyboardEvent<HTMLInputElement | HTMLSelectElement>) => {
-    console.log(e.key);
-    if (e.key === "Enter") {
-      console.log(e.key);
-    if (e.key === "Enter") {
-      e.preventDefault();
-
-      const focusableElements = Array.from(document.querySelectorAll('input, select, textarea'));
-      const currentIndex = focusableElements.indexOf(e.currentTarget);
-      const nextElement = focusableElements[currentIndex + 1];
-
-      if (nextElement) {
-        (nextElement as HTMLElement).focus();
-      }
-    }
-    }
-  }
   return (
     <div className="py-4">
       <h2 className="text-lg font-bold">Información de la Venta</h2>

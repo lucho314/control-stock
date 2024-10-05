@@ -15,6 +15,7 @@ import React, { KeyboardEventHandler, useRef, useState } from "react";
 export const GrillaProductoNewSale = () => {
   const [loading, setLoading] = useState(false);
   const cantidadInputRef = useRef<HTMLInputElement>(null);
+  const inputCodigoRef = useRef<HTMLInputElement>(null);
   const { productItems } = useSaleStore((state) =>
     state.getSummaryInformation()
   );
@@ -23,18 +24,6 @@ export const GrillaProductoNewSale = () => {
     addProductToSale: state.addProductToSale,
     updateProductQuantity: state.updateProductQuantity,
   }));
-
-  const handleProductQuantityChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    produc: Producto
-  ) => {
-    const value = e.target.value;
-    const quantity = parseInt(value, 10);
-    if (isNaN(quantity)) return;
-    if (quantity === 0) return;
-
-    updateProductQuantity(produc, quantity);
-  };
 
   const handleKeydown: KeyboardEventHandler<HTMLInputElement> = async (e) => {
     if (e.key === "Enter") {
@@ -54,6 +43,23 @@ export const GrillaProductoNewSale = () => {
         }, 200);
       }
     }
+  };
+
+  const handlerEnterQuantity = (
+    e: React.KeyboardEvent<HTMLInputElement | HTMLSelectElement>,
+    produc: Producto
+  ) => {
+    if (e.key !== "Enter" && e.key !== "Tab") return;
+    e.preventDefault();
+    const input = e.target as HTMLInputElement;
+    const value = input.value;
+
+    const quantity = parseInt(value, 10);
+    if (isNaN(quantity)) return;
+    if (quantity === 0) return;
+
+    updateProductQuantity(produc, quantity);
+    inputCodigoRef.current?.focus();
   };
 
   return (
@@ -94,7 +100,7 @@ export const GrillaProductoNewSale = () => {
                 name="cantidad"
                 defaultValue={cantidad}
                 ref={cantidadInputRef}
-                onChange={(e) => handleProductQuantityChange(e, producto)}
+                onKeyDown={(e) => handlerEnterQuantity(e, producto)}
                 type="number"
                 className="w-full p-2"
               />
@@ -112,6 +118,7 @@ export const GrillaProductoNewSale = () => {
               className="w-full p-2"
               onKeyDown={handleKeydown}
               loading={loading}
+              ref={inputCodigoRef}
             />
           </TableCell>
           <TableCell>
