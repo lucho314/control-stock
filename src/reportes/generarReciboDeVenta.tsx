@@ -88,7 +88,7 @@ export async function generarReciboDeVenta(ventaId: string) {
   } else {
     // En producción (servidor), usa la versión optimizada con Chromium de Sparticuz
     browser = await puppeteer.launch({
-      executablePath: await chromium.executablePath,
+      executablePath: await chromium.executablePath(),
       args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",
