@@ -97,6 +97,7 @@ export async function generarReciboDeVenta(ventaId: string) {
           "--disable-dev-shm-usage",
         ],
         headless: chromium.headless,
+        timeout: 30000, // Aumentar el tiempo de espera a 30 segundos
       });
     }
 
