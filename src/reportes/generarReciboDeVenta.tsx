@@ -1,28 +1,28 @@
-"use server";
+import puppeteer from "puppeteer";
+import chromium from "@sparticuz/chromium";
 import prisma from "@/lib/prisma";
-import puppeteer from 'puppeteer';
 
 export async function generarReciboDeVenta(ventaId: string) {
-    // Obtener la venta desde la base de datos usando Prisma
-    const venta = await prisma.venta.findUnique({
-      where: { id: ventaId },
-      include: {
-        productos: {
-          include: {
-            productos: true, // Traer detalles del producto
-          },
+  // Obtener la venta desde la base de datos usando Prisma
+  const venta = await prisma.venta.findUnique({
+    where: { id: ventaId },
+    include: {
+      productos: {
+        include: {
+          productos: true, // Traer detalles del producto
         },
-        cliente: true, // Traer detalles del cliente
       },
-    });
-  
-    if (!venta) {
-      console.log('Venta no encontrada');
-      return;
-    }
-  
-    // Crear el contenido HTML para el recibo
-    const html = `
+      cliente: true, // Traer detalles del cliente
+    },
+  });
+
+  if (!venta) {
+    console.log("Venta no encontrada");
+    return;
+  }
+
+  // Crear el contenido HTML para el recibo
+  const html = `
       <html>
       <head>
         <style>
@@ -53,14 +53,18 @@ export async function generarReciboDeVenta(ventaId: string) {
             </tr>
           </thead>
           <tbody>
-            ${venta.productos.map((producto) => `
+            ${venta.productos
+              .map(
+                (producto) => `
               <tr>
                 <td>${producto.productos.nombre}</td>
                 <td>${producto.cantidad}</td>
                 <td>${producto.precio.toFixed(2)}</td>
                 <td>${producto.total.toFixed(2)}</td>
               </tr>
-            `).join('')}
+            `
+              )
+              .join("")}
           </tbody>
         </table>
   
@@ -72,22 +76,41 @@ export async function generarReciboDeVenta(ventaId: string) {
       </body>
       </html>
     `;
-  
-    // Generar el PDF con Puppeteer
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-  
-    // Cargar el contenido HTML
-    await page.setContent(html);
-  
-    // Generar el PDF
-    const pdf =await page.pdf({
-      path: 'recibo_venta.pdf',
-      format: 'A4',
-      printBackground: true,
+
+  // Selecciona Puppeteer según el entorno
+  let browser;
+
+  if (process.env.NODE_ENV === "development") {
+    // En desarrollo (local), usa Puppeteer completo
+    browser = await puppeteer.launch({
+      headless: true, // O false si quieres depurar
     });
-  
-    await browser.close();
-    
-    return pdf;
+  } else {
+    // En producción (servidor), usa la versión optimizada con Chromium de Sparticuz
+    browser = await puppeteer.launch({
+      executablePath: await chromium.executablePath(),
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+      ],
+      headless: chromium.headless,
+    });
   }
+
+  const page = await browser.newPage();
+
+  // Cargar el contenido HTML
+  await page.setContent(html);
+
+  // Generar el PDF
+  const pdf = await page.pdf({
+    path: "recibo_venta.pdf",
+    format: "A4",
+    printBackground: true,
+  });
+
+  await browser.close();
+
+  return pdf;
+}
