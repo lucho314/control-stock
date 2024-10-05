@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { useSaleStore } from "@/store/sale/sale-store";
 
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { HeadNewSale } from "./HeadNewSale";
 import { GrillaProductoNewSale } from "./GrillaProductoNewSale";
 import { TotalSumaryNewSale } from "./TotalSumaryNewSale";
@@ -27,7 +27,6 @@ export const DialogNewSale = ({ children }: Props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [guardarVenta, setGuardarVenta] = useState(false);
 
-  const formRef = React.useRef<HTMLFormElement>(null);
   const {
     fecha,
     numeracion,
@@ -41,6 +40,16 @@ export const DialogNewSale = ({ children }: Props) => {
   const { resetState } = useSaleStore((state) => ({
     resetState: state.resetState,
   }));
+
+  useEffect(() => {
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "F2") {
+        setIsDialogOpen(true);
+      }
+    });
+  }, [isDialogOpen]);
+
+  const formRef = React.useRef<HTMLFormElement>(null);
 
   const saveSale = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
