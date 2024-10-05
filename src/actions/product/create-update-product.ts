@@ -12,6 +12,7 @@ const productSchema = z.object({
   precio: z.preprocess((val) => parseFloat(val as string), z.number().min(0)),
   codigo_de_barras: z.string().min(3).max(255),
   proveedor_id: z.string().uuid().optional().nullable(),
+  codigo_interno: z.string().min(3).max(255),
 });
 
 export const createUpdateProduct = async (
@@ -36,19 +37,26 @@ export const createUpdateProduct = async (
   }
 
   const product = productParsed.data;
-  const { id, ...rest } = product;
+  const { id, nombre, descripcion, codigo_interno, ...rest } = product;
 
   try {
+    const dataProduct = {
+      nombre: nombre.toUpperCase(),
+      descripcion: descripcion.toUpperCase(),
+      codigo_interno: codigo_interno.toUpperCase(),
+      ...rest,
+    };
+
     if (id) {
       const updatedProduct = await prisma.productos.update({
         where: { id },
-        data: rest,
+        data: dataProduct,
       });
       revalidatePath("/productos");
       return { ok: true, product: updatedProduct };
     } else {
       const newProduct = await prisma.productos.create({
-        data: rest,
+        data: dataProduct,
       });
       revalidatePath("/productos");
       return { ok: true, product: newProduct };
