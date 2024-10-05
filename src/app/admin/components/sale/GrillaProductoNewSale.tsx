@@ -42,6 +42,7 @@ export const GrillaProductoNewSale = () => {
           cantidadInputRef.current?.focus();
         }, 200);
       }
+      setLoading(false);
     }
   };
 
