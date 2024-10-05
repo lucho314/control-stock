@@ -36,19 +36,25 @@ export const createUpdateProduct = async (
   }
 
   const product = productParsed.data;
-  const { id, ...rest } = product;
+  const { id, nombre, descripcion, ...rest } = product;
 
   try {
+    const dataProduct = {
+      nombre: nombre.toUpperCase(),
+      descripcion: descripcion.toUpperCase(),
+      ...rest,
+    };
+
     if (id) {
       const updatedProduct = await prisma.productos.update({
         where: { id },
-        data: rest,
+        data: dataProduct,
       });
       revalidatePath("/productos");
       return { ok: true, product: updatedProduct };
     } else {
       const newProduct = await prisma.productos.create({
-        data: rest,
+        data: dataProduct,
       });
       revalidatePath("/productos");
       return { ok: true, product: newProduct };
