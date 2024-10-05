@@ -35,7 +35,7 @@ export const HeadNewSale = () => {
           <Input
             id="numeracion"
             type="text"
-            className="w-full p-2 border"
+            className="w-full p-2 border uppercase"
             required
             defaultValue={numeracion}
             autoFocus
@@ -48,7 +48,7 @@ export const HeadNewSale = () => {
           <Label htmlFor="formaPago">Forma de Pago</Label>
           <select
             id="formaPago"
-            className="w-full p-2 border"
+            className="w-full p-2 border uppercase"
             required
             onChange={(e) => setFormaDePago(e.target.value as FormaDePago)}
             onKeyDown={enterAsTab}
