@@ -90,7 +90,7 @@ export const GrillaProductoNewSale = () => {
                 variant="sm"
                 name="nombre"
                 defaultValue={producto.nombre!}
-                className="w-full p-2"
+                className="w-full p-2 uppercase"
               />
             </TableCell>
             <TableCell>{producto.precio || "$0.00"}</TableCell>
@@ -115,7 +115,7 @@ export const GrillaProductoNewSale = () => {
             <Input
               variant="sm"
               name="codigo"
-              className="w-full p-2"
+              className="w-full p-2 uppercase"
               onKeyDown={handleKeydown}
               loading={loading}
               ref={inputCodigoRef}
