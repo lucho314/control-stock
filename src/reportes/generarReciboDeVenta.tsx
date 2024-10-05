@@ -1,6 +1,7 @@
 import puppeteer from "puppeteer";
 import chromium from "@sparticuz/chromium";
 import prisma from "@/lib/prisma";
+import fs from "fs"; // Asegúrate de importar fs si lo necesitas para guardar el PDF
 
 export async function generarReciboDeVenta(ventaId: string) {
   // Obtener la venta desde la base de datos usando Prisma
@@ -80,37 +81,45 @@ export async function generarReciboDeVenta(ventaId: string) {
   // Selecciona Puppeteer según el entorno
   let browser;
 
-  if (process.env.NODE_ENV === "development") {
-    // En desarrollo (local), usa Puppeteer completo
-    browser = await puppeteer.launch({
-      headless: true, // O false si quieres depurar
+  try {
+    if (process.env.NODE_ENV === "development") {
+      // En desarrollo (local), usa Puppeteer completo
+      browser = await puppeteer.launch({
+        headless: true, // O false si quieres depurar
+      });
+    } else {
+      // En producción (servidor), usa la versión optimizada con Chromium de Sparticuz
+      browser = await puppeteer.launch({
+        executablePath: await chromium.executablePath(),
+        args: [
+          "--no-sandbox",
+          "--disable-setuid-sandbox",
+          "--disable-dev-shm-usage",
+        ],
+        headless: chromium.headless,
+      });
+    }
+
+    const page = await browser.newPage();
+
+    // Cargar el contenido HTML
+    await page.setContent(html);
+
+    // Generar el PDF
+    const pdfPath = `recibo_venta.pdf`; // Cambiar la ruta del PDF si es necesario
+    const pdf = await page.pdf({
+      path: pdfPath,
+      format: "A4",
+      printBackground: true,
     });
-  } else {
-    // En producción (servidor), usa la versión optimizada con Chromium de Sparticuz
-    browser = await puppeteer.launch({
-      executablePath: await chromium.executablePath(),
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-      ],
-      headless: chromium.headless,
-    });
+
+    await browser.close();
+
+    return pdf; // Retorna la ruta del archivo generado
+  } catch (error) {
+    console.error("Error al generar el recibo de venta:", error);
+    if (browser) {
+      await browser.close(); // Cierra el navegador en caso de error
+    }
   }
-
-  const page = await browser.newPage();
-
-  // Cargar el contenido HTML
-  await page.setContent(html);
-
-  // Generar el PDF
-  const pdf = await page.pdf({
-    path: "recibo_venta.pdf",
-    format: "A4",
-    printBackground: true,
-  });
-
-  await browser.close();
-
-  return pdf;
 }
