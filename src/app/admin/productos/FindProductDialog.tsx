@@ -178,7 +178,7 @@ export const FindProductDialog = () => {
                     <TableCell>
                       {producto.precio?.toString() || "$0.00"}
                     </TableCell>
-                    <TableCell>{producto.stock?.toString() || "0"}</TableCell>
+                    <TableCell>{producto.inStock?.toString() || "0"}</TableCell>
                     <TableCell>
                       <Button
                         variant={"success"}
