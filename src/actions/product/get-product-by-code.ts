@@ -7,6 +7,10 @@ export const getProductByID = async (code: string) => {
     const product = await prisma.productos.findFirst({
       where: {
         codigo_interno: code.toUpperCase(),
+        //insStock > 0
+        inStock: {
+          gt: 0,
+        },
       },
     });
 

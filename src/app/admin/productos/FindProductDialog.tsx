@@ -20,10 +20,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { use, useState } from "react";
 import { enterAsTab } from "@/utils/enterAsTab";
 import { searchProducts } from "@/actions/product/searchProducts";
 import { useSaleStore } from "@/store/sale/sale-store";
+import { useState } from "react";
 
 interface ProductSearchCriteria {
   codigo?: string;
@@ -62,10 +62,21 @@ export const FindProductDialog = () => {
     closeFindProduct();
   };
 
+  const handleOnKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "F4") {
+      e.preventDefault();
+      findProducts();
+    }
+    enterAsTab(e as React.KeyboardEvent<HTMLElement>);
+  };
+
   return (
     <Dialog open={findProductOpen} onOpenChange={closeFindProduct}>
       <DialogTrigger></DialogTrigger>
-      <DialogContent className="sm:max-w-7xl bg-white">
+      <DialogContent
+        className="sm:max-w-7xl bg-white"
+        id="find-product-content"
+      >
         <DialogHeader>
           <DialogTitle>Busueda avanzada</DialogTitle>
           <DialogDescription>Busqueda avanzada de productos</DialogDescription>
@@ -79,7 +90,7 @@ export const FindProductDialog = () => {
                     type="text"
                     tabIndex={11}
                     onChange={handlerChange}
-                    onKeyDown={enterAsTab}
+                    onKeyDown={handleOnKeyDown}
                   />
                 </div>
                 <div className="col-span-4">
@@ -89,7 +100,7 @@ export const FindProductDialog = () => {
                     type="text"
                     tabIndex={12}
                     onChange={handlerChange}
-                    onKeyDown={enterAsTab}
+                    onKeyDown={handleOnKeyDown}
                   />
                 </div>
               </div>
@@ -101,7 +112,7 @@ export const FindProductDialog = () => {
                     type="text"
                     tabIndex={13}
                     onChange={handlerChange}
-                    onKeyDown={enterAsTab}
+                    onKeyDown={handleOnKeyDown}
                   />
                 </div>
                 <div className="col-span-2">
@@ -111,7 +122,7 @@ export const FindProductDialog = () => {
                     type="text"
                     tabIndex={14}
                     onChange={handlerChange}
-                    onKeyDown={enterAsTab}
+                    onKeyDown={handleOnKeyDown}
                   />
                 </div>
               </div>
@@ -123,7 +134,7 @@ export const FindProductDialog = () => {
                     type="text"
                     tabIndex={15}
                     onChange={handlerChange}
-                    onKeyDown={enterAsTab}
+                    onKeyDown={handleOnKeyDown}
                   />
                 </div>
                 <div className="col-span-2">
@@ -133,7 +144,7 @@ export const FindProductDialog = () => {
                     type="text"
                     tabIndex={16}
                     onChange={handlerChange}
-                    onKeyDown={enterAsTab}
+                    onKeyDown={handleOnKeyDown}
                   />
                 </div>
               </div>
@@ -145,7 +156,7 @@ export const FindProductDialog = () => {
                 tabIndex={17}
                 onClick={findProducts}
               >
-                Buscar
+                Buscar (F4)
               </Button>
             </aside>
           </div>
@@ -182,6 +193,7 @@ export const FindProductDialog = () => {
                     <TableCell>
                       <Button
                         variant={"success"}
+                        disabled={producto.inStock === 0}
                         onClick={(e) => selectProduct(producto)}
                       >
                         Seleccionar
