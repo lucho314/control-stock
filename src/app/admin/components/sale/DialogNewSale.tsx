@@ -18,6 +18,7 @@ import { GrillaProductoNewSale } from "./GrillaProductoNewSale";
 import { TotalSumaryNewSale } from "./TotalSumaryNewSale";
 import { sumarySale } from "@/types";
 import { LoadingIcon } from "../icons/LoadingIcon";
+import { FindProductDialog } from "../../productos/FindProductDialog";
 
 interface Props {
   children?: React.ReactNode;
@@ -42,11 +43,10 @@ export const DialogNewSale = ({ children }: Props) => {
   }));
 
   useEffect(() => {
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "F2") {
-        setIsDialogOpen(true);
-      }
-    });
+    if (isDialogOpen) {
+      resetState();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDialogOpen]);
 
   const formRef = React.useRef<HTMLFormElement>(null);
@@ -112,6 +112,7 @@ export const DialogNewSale = ({ children }: Props) => {
               )}
             </DialogFooter>
           </form>
+          <FindProductDialog />
         </DialogContent>
       </Dialog>
     </>
