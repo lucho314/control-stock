@@ -178,12 +178,6 @@ function calcullarTotales(productos: ProductoVenta[], bonificacion: number) {
   const subTotal = +productos
     .reduce((acc, p) => Number(acc) + Number(p.total), 0)
     .toFixed(2);
-  // const iva = +productos
-  //   .reduce(
-  //     (acc, p) => Number(acc) + (Number(p.iva) * Number(p.total)) / 100,
-  //     0
-  //   )
-  //   .toFixed(2);
   let total = +Number(subTotal).toFixed(2);
 
   if (bonificacion) {

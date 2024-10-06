@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useSaleStore } from "@/store/sale/sale-store";
+import { useUiStore } from "@/store/ui/ui-store";
 import { Producto } from "@/types";
 import React, { KeyboardEventHandler, useRef, useState } from "react";
 
@@ -16,6 +17,7 @@ export const GrillaProductoNewSale = () => {
   const [loading, setLoading] = useState(false);
   const cantidadInputRef = useRef<HTMLInputElement>(null);
   const inputCodigoRef = useRef<HTMLInputElement>(null);
+  const { openendProduct } = useUiStore();
   const { productItems } = useSaleStore((state) =>
     state.getSummaryInformation()
   );
@@ -43,6 +45,7 @@ export const GrillaProductoNewSale = () => {
         }, 200);
       }
       setLoading(false);
+      openendProduct();
     }
   };
 
