@@ -38,9 +38,8 @@ export const DialogNewSale = ({ children }: Props) => {
     bonificacion,
   } = useSaleStore((state) => state.getSummaryInformation());
 
-  const { resetState } = useSaleStore((state) => ({
-    resetState: state.resetState,
-  }));
+  const { resetState, isValid } = useSaleStore();
+  console.log("isValid", isValid);
 
   useEffect(() => {
     if (isDialogOpen) {
@@ -108,7 +107,9 @@ export const DialogNewSale = ({ children }: Props) => {
                   Guardando...
                 </Button>
               ) : (
-                <Button type="submit">Guardar Venta</Button>
+                <Button type="submit" disabled={!isValid}>
+                  Guardar Venta
+                </Button>
               )}
             </DialogFooter>
           </form>

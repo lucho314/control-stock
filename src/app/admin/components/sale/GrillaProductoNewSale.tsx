@@ -1,4 +1,4 @@
-import { getProductByID } from "@/actions";
+import { getProductByID, getStockByID } from "@/actions";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -27,6 +27,28 @@ export const GrillaProductoNewSale = () => {
     updateProductQuantity: state.updateProductQuantity,
   }));
 
+  const updateStock = async (producto: Producto, input: HTMLInputElement) => {
+    const value = input.value;
+    const cantidad = parseInt(value, 10);
+    if (isNaN(cantidad)) return;
+    if (cantidad === 0) return;
+
+    const isUpdate = await updateProductQuantity(
+      producto,
+      parseInt(input.value, 10)
+    );
+
+    if (!isUpdate) {
+      input.focus();
+      //poner en rojo el input
+      input.style.border = "2px solid red";
+      return;
+    }
+    input.style.border = "1px solid #e2e8f0";
+
+    inputCodigoRef.current?.focus();
+  };
+
   const handleKeydown: KeyboardEventHandler<HTMLInputElement> = async (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -43,27 +65,29 @@ export const GrillaProductoNewSale = () => {
         setTimeout(() => {
           cantidadInputRef.current?.focus();
         }, 200);
+        return;
       }
       setLoading(false);
       openendProduct();
     }
   };
 
-  const handlerEnterQuantity = (
-    e: React.KeyboardEvent<HTMLInputElement | HTMLSelectElement>,
+  const handlerEnterQuantity = async (
+    e: React.KeyboardEvent<HTMLInputElement>,
     produc: Producto
   ) => {
     if (e.key !== "Enter" && e.key !== "Tab") return;
     e.preventDefault();
     const input = e.target as HTMLInputElement;
-    const value = input.value;
+    await updateStock(produc, input);
+  };
 
-    const quantity = parseInt(value, 10);
-    if (isNaN(quantity)) return;
-    if (quantity === 0) return;
-
-    updateProductQuantity(produc, quantity);
-    inputCodigoRef.current?.focus();
+  const handlerFocusOutQuantity = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    produc: Producto
+  ) => {
+    const input = e.target as HTMLInputElement;
+    await updateStock(produc, input);
   };
 
   return (
@@ -105,6 +129,7 @@ export const GrillaProductoNewSale = () => {
                 defaultValue={cantidad}
                 ref={cantidadInputRef}
                 onKeyDown={(e) => handlerEnterQuantity(e, producto)}
+                onChange={(e) => handlerFocusOutQuantity(e, producto)}
                 type="number"
                 className="w-full p-2"
               />

@@ -1,13 +1,15 @@
+import { getStockByID } from "@/actions";
 import { Producto, ProductoVenta, sumarySale, Venta } from "@/types";
 import { FormaDePago } from "@prisma/client";
 import { create } from "zustand";
 
 interface State {
   sale: Venta;
+  isValid: boolean;
 
   addProductToSale: (product: any) => void;
   removeProductFromSale: (product: any) => void;
-  updateProductQuantity: (product: any, quantity: number) => void;
+  updateProductQuantity: (product: any, quantity: number) => Promise<boolean>;
   setNumeration: (numeration: string) => void;
   setFormaDePago: (formaDePago: FormaDePago) => void;
   getSummaryInformation: () => sumarySale;
@@ -37,6 +39,7 @@ export const useSaleStore = create<State>()((set, get) => ({
     },
     productos: [],
   },
+  isValid: false,
   addProductToSale: (product: Producto) => {
     const { sale } = get();
 
@@ -72,12 +75,16 @@ export const useSaleStore = create<State>()((set, get) => ({
       },
     });
   },
-  updateProductQuantity: (product: Producto, quantity: number) => {
+  updateProductQuantity: async (product: Producto, quantity: number) => {
     const { sale } = get();
+
+    const check = await checkStock(product, quantity);
+    set({ isValid: check });
+
+    if (!check) return false;
 
     const productos = sale.productos.map((p) => {
       const { producto } = p;
-
       if (p.producto.id === product.id) {
         return {
           ...p,
@@ -94,6 +101,8 @@ export const useSaleStore = create<State>()((set, get) => ({
         productos,
       },
     });
+
+    return true;
   },
   getSummaryInformation: () => {
     const { sale } = get();
@@ -188,4 +197,13 @@ function calcullarTotales(productos: ProductoVenta[], bonificacion: number) {
     subTotal,
     total,
   };
+}
+
+export async function checkStock(producto: Producto, cantidad: number) {
+  if (cantidad === 0) return;
+  const stockDisponible = await getStockByID(producto.id!);
+
+  console.log({ stockDisponible, cantidad });
+
+  return stockDisponible >= cantidad;
 }
