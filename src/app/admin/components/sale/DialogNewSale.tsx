@@ -39,7 +39,6 @@ export const DialogNewSale = ({ children }: Props) => {
   } = useSaleStore((state) => state.getSummaryInformation());
 
   const { resetState, isValid } = useSaleStore();
-  console.log("isValid", isValid);
 
   useEffect(() => {
     if (isDialogOpen) {
