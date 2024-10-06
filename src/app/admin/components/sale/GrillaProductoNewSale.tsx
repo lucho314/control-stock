@@ -1,4 +1,4 @@
-import { getProductByID } from "@/actions";
+import { getProductByID, getStockByID } from "@/actions";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -43,13 +43,14 @@ export const GrillaProductoNewSale = () => {
         setTimeout(() => {
           cantidadInputRef.current?.focus();
         }, 200);
+        return;
       }
       setLoading(false);
       openendProduct();
     }
   };
 
-  const handlerEnterQuantity = (
+  const handlerEnterQuantity = async (
     e: React.KeyboardEvent<HTMLInputElement | HTMLSelectElement>,
     produc: Producto
   ) => {
@@ -61,6 +62,14 @@ export const GrillaProductoNewSale = () => {
     const quantity = parseInt(value, 10);
     if (isNaN(quantity)) return;
     if (quantity === 0) return;
+
+    //chequear stock
+    const stockDisponible = await getStockByID(produc.id!);
+
+    if (stockDisponible < quantity) {
+      alert("No hay stock suficiente");
+      return;
+    }
 
     updateProductQuantity(produc, quantity);
     inputCodigoRef.current?.focus();
