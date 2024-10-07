@@ -1,19 +1,11 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { sumarySale, Venta, type Provider } from "@/types";
-import { FormaDePago } from "@prisma/client";
+import { ProductoVenta, sumarySale, Venta, type Provider } from "@/types";
+import { FormaDePago, productos } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
-/**
- * fecha: Date;
-    numeracion: string;
-    subTotal: number;
-    iva: number;
-    total: number;
-    productItems: ProductoVenta[];
- */
 const providerSchema = z.object({
   fecha: z.date(),
   numeracion: z.string(),
@@ -35,6 +27,29 @@ const providerSchema = z.object({
   ),
 });
 
+const checkStock = async (products: ProductoVenta[]) => {
+  const productsId = products.map((p) => p.producto.id!);
+
+  const productsDB = await prisma.productos.findMany({
+    select: {
+      id: true,
+      inStock: true,
+    },
+    where: {
+      id: {
+        in: productsId,
+      },
+    },
+  });
+
+  const productsInStock = productsDB.filter((p) => {
+    const product = products.find((p2) => p2.producto.id === p.id);
+    return p.inStock >= product!.cantidad;
+  });
+
+  return productsInStock.length === products.length;
+};
+
 export const createSale = async (venta: sumarySale) => {
   const saleParse = providerSchema.safeParse(venta);
 
@@ -44,6 +59,12 @@ export const createSale = async (venta: sumarySale) => {
   }
 
   const sale = saleParse.data;
+
+  const stock = await checkStock(sale.productItems as ProductoVenta[]);
+  if (!stock) {
+    console.error("No hay stock suficiente");
+    return { ok: false, message: "No hay stock suficiente" };
+  }
 
   try {
     //iniciar transaccion prisma

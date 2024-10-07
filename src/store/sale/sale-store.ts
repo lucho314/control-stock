@@ -59,6 +59,7 @@ export const useSaleStore = create<State>()((set, get) => ({
         ...sale,
         productos: [...sale.productos, producVenta],
       },
+      isValid: true,
     });
   },
   removeProductFromSale: (product: Producto) => {
@@ -77,11 +78,6 @@ export const useSaleStore = create<State>()((set, get) => ({
   },
   updateProductQuantity: async (product: Producto, quantity: number) => {
     const { sale } = get();
-
-    const check = await checkStock(product, quantity);
-    set({ isValid: check });
-
-    if (!check) return false;
 
     const productos = sale.productos.map((p) => {
       const { producto } = p;
@@ -102,7 +98,10 @@ export const useSaleStore = create<State>()((set, get) => ({
       },
     });
 
-    return true;
+    const check = await checkStock(product, quantity);
+    set({ isValid: check });
+
+    return check;
   },
   getSummaryInformation: () => {
     const { sale } = get();
