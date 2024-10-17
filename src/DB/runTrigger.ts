@@ -17,7 +17,9 @@ const client = new Client({
 });
 
 // Cargar el archivo SQL
-const sql = fs.readFileSync("src/DB/add_stock_trigger.sql").toString();
+const addStockTrigger = fs
+  .readFileSync("src/DB/add_stock_trigger.sql")
+  .toString();
 
 async function run() {
   try {
@@ -25,8 +27,8 @@ async function run() {
     console.log("Conectado a la base de datos");
 
     // Ejecutar el SQL del trigger
-    await client.query(sql);
-    console.log("Trigger ejecutado con éxito");
+    await client.query(addStockTrigger);
+    console.log("Trigger addStockTrigger ejecutado con éxito");
   } catch (err) {
     console.error("Error al ejecutar el trigger:", err);
   } finally {

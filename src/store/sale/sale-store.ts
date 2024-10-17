@@ -59,6 +59,7 @@ export const useSaleStore = create<State>()((set, get) => ({
         ...sale,
         productos: [...sale.productos, producVenta],
       },
+      isValid: true,
     });
   },
   removeProductFromSale: (product: Producto) => {
@@ -77,11 +78,6 @@ export const useSaleStore = create<State>()((set, get) => ({
   },
   updateProductQuantity: async (product: Producto, quantity: number) => {
     const { sale } = get();
-
-    const check = await checkStock(product, quantity);
-    set({ isValid: check });
-
-    if (!check) return false;
 
     const productos = sale.productos.map((p) => {
       const { producto } = p;
@@ -102,7 +98,10 @@ export const useSaleStore = create<State>()((set, get) => ({
       },
     });
 
-    return true;
+    const check = await checkStock(product, quantity);
+    set({ isValid: check });
+
+    return check;
   },
   getSummaryInformation: () => {
     const { sale } = get();
@@ -200,7 +199,7 @@ function calcullarTotales(productos: ProductoVenta[], bonificacion: number) {
 }
 
 export async function checkStock(producto: Producto, cantidad: number) {
-  if (cantidad === 0) return;
+  if (cantidad === 0) return false;
   const stockDisponible = await getStockByID(producto.id!);
 
   console.log({ stockDisponible, cantidad });
