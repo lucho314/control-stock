@@ -199,7 +199,7 @@ function calcullarTotales(productos: ProductoVenta[], bonificacion: number) {
 }
 
 export async function checkStock(producto: Producto, cantidad: number) {
-  if (cantidad === 0) return;
+  if (cantidad === 0) return false;
   const stockDisponible = await getStockByID(producto.id!);
 
   console.log({ stockDisponible, cantidad });
