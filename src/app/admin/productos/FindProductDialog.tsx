@@ -3,7 +3,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -11,7 +10,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUiStore } from "@/store/ui/ui-store";
-import { productos } from "@prisma/client";
 import {
   Table,
   TableBody,
@@ -24,6 +22,7 @@ import { enterAsTab } from "@/utils/enterAsTab";
 import { searchProducts } from "@/actions/product/searchProducts";
 import { useSaleStore } from "@/store/sale/sale-store";
 import { useState } from "react";
+import { Producto } from "@/types";
 
 interface ProductSearchCriteria {
   codigo?: string;
@@ -36,7 +35,7 @@ interface ProductSearchCriteria {
 
 export const FindProductDialog = () => {
   const { findProductOpen, closeFindProduct } = useUiStore();
-  const [productos, setProductos] = useState<productos[]>([]);
+  const [productos, setProductos] = useState<Producto[]>([]);
   const [searchCriteria, setSearchCriteria] = useState<ProductSearchCriteria>(
     {}
   );
@@ -55,7 +54,7 @@ export const FindProductDialog = () => {
     setProductos(productos);
   };
 
-  const selectProduct = (producto: productos) => {
+  const selectProduct = (producto: Producto) => {
     addProductToSale(producto);
     setSearchCriteria({});
     setProductos([]);
@@ -180,7 +179,7 @@ export const FindProductDialog = () => {
                   </TableCell>
                 </TableRow>
               ) : (
-                productos.map((producto: productos, index: number) => (
+                productos.map((producto: Producto, index: number) => (
                   <TableRow key={index}>
                     <TableCell>{producto.codigo_interno!}</TableCell>
                     <TableCell>

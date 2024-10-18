@@ -1,5 +1,6 @@
 "use server";
 import prisma from "@/lib/prisma";
+import { Producto } from "@/types";
 
 interface SearchProductsArgs {
   codigo?: string;
@@ -40,9 +41,15 @@ export async function searchProducts(args: SearchProductsArgs) {
     conditions.peso = { equals: peso };
   }
 
-  return await prisma.productos.findMany({
+  const productos = await prisma.productos.findMany({
     where: conditions,
-    //maximo 5 productos
     take: 5,
   });
+
+  const productosConvertidos: Producto[] = productos.map((producto) => ({
+    ...producto,
+    precio: producto.precio ? parseFloat(producto.precio.toString()) : 0,
+  }));
+
+  return productosConvertidos;
 }
