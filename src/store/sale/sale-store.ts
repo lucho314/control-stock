@@ -60,7 +60,7 @@ export const useSaleStore = create<State>()((set, get) => ({
       cantidad: 1,
       precio: 0,
       iva: 21,
-      total: product.precio,
+      total: product.precio!,
       producto: product,
     };
 

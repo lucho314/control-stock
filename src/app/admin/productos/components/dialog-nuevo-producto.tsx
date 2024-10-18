@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { ChangeEvent, ChangeEventHandler, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -31,6 +31,7 @@ import {
 import Image from "next/image";
 import { Textarea } from "@/components/ui/textarea";
 import { Bounce, toast } from "react-toastify";
+import { Producto } from "@/types";
 
 const colores = [
   { id: "Rojo", nombre: "Rojo" },
@@ -38,41 +39,21 @@ const colores = [
   { id: "Amarillo", nombre: "Amarillo" },
 ];
 
-const productDefault = {
-  id: null,
+const productDefault: Producto = {
   nombre: "",
-  categoria_id: "", // Asegúrate de que tenga un valor inicial
-  precio: "0",
-  stock: "0",
-  codigo_de_barras: "",
-  proveedor_id: "", // Asegúrate de que tenga un valor inicial
-  peso: "0",
-  tamano: "0",
+  categoria_id: "",
+  precio: null,
+  precio_costo: null,
+  porcentaje_ganancia: null,
+  inStock: 0,
+  proveedor_id: "",
+  peso: null,
+  tamano: null,
   color: "",
   marca: "",
-  imagen: "",
+  imagen: null,
   codigo_interno: "",
   descripcion: "",
-};
-
-const createFormData = (nuevoProducto: any) => {
-  const formData = new FormData();
-  nuevoProducto.id && formData.append("id", nuevoProducto.id);
-  formData.append("nombre", nuevoProducto.nombre);
-  formData.append("categoria_id", nuevoProducto.categoria_id);
-  formData.append("precio", nuevoProducto.precio);
-  formData.append("stock", nuevoProducto.stock);
-  formData.append("codigo_de_barras", nuevoProducto.codigo_de_barras);
-  formData.append("proveedor_id", nuevoProducto.proveedor_id);
-  formData.append("peso", nuevoProducto.peso);
-  formData.append("tamano", nuevoProducto.tamano);
-  formData.append("color", nuevoProducto.color);
-  formData.append("marca", nuevoProducto.marca);
-  formData.append("imagen", nuevoProducto.imagen);
-  formData.append("codigo_interno", nuevoProducto.codigo_interno);
-  formData.append("descripcion", nuevoProducto.descripcion);
-
-  return formData;
 };
 
 interface PropsDialogNuevoProducto {
@@ -85,7 +66,7 @@ const DialogNuevoProducto = ({
   producto,
 }: PropsDialogNuevoProducto) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [nuevoProducto, setNuevoProducto] = useState(
+  const [nuevoProducto, setNuevoProducto] = useState<Producto>(
     producto ?? productDefault
   );
   const [categorias, setCategorias] = useState<ICategory[]>([]);
@@ -108,15 +89,8 @@ const DialogNuevoProducto = ({
 
   const handleNuevoProducto = async (e: React.FormEvent) => {
     e.preventDefault();
-    const precio = parseFloat(nuevoProducto.precio) || 0;
-    const stock = parseInt(nuevoProducto.stock) || 0;
-    const peso = parseInt(nuevoProducto.peso) || 0;
-    const tamano = parseInt(nuevoProducto.tamano) || 0;
 
-    console.log({ ...nuevoProducto, precio, stock, peso, tamano });
-    const { ok, product, error } = await createUpdateProduct(
-      createFormData(nuevoProducto)
-    );
+    const { ok, error } = await createUpdateProduct(nuevoProducto);
 
     if (!ok) {
       toast.error(error, {
@@ -146,6 +120,52 @@ const DialogNuevoProducto = ({
       });
     }
   };
+
+  const calcularPrecioVentaAndPorcentaje = (
+    e: ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = parseFloat(e.target.value) || null;
+    const whoChanged = e.target.id;
+
+    setNuevoProducto((anterior) => ({ ...anterior, [whoChanged]: value }));
+
+    if (!value) return;
+
+    const { precio_costo, precio } = nuevoProducto;
+
+    if (!precio_costo) return;
+
+    if (whoChanged === "precio_costo" && precio) {
+      setNuevoProducto({
+        ...nuevoProducto,
+        porcentaje_ganancia: +(((precio - value) / value) * 100).toFixed(2),
+        [whoChanged]: value,
+      });
+      return;
+    }
+
+    if (whoChanged === "porcentaje_ganancia" && precio_costo) {
+      console.log("porcentaje_ganancia", value);
+      setNuevoProducto({
+        ...nuevoProducto,
+        precio: +(precio_costo + precio_costo * (value / 100)).toFixed(2),
+        [whoChanged]: value,
+      });
+      return;
+    }
+
+    if (whoChanged === "precio" && precio_costo) {
+      setNuevoProducto({
+        ...nuevoProducto,
+        porcentaje_ganancia: +(
+          ((value - precio_costo) / precio_costo) *
+          100
+        ).toFixed(2),
+        [whoChanged]: value,
+      });
+    }
+  };
+
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -193,29 +213,42 @@ const DialogNuevoProducto = ({
               </Select>
             </div>
             <div className="sm:col-span-3">
-              <Label htmlFor="precio">Precio</Label>
+              <Label htmlFor="precio">Precio de costo</Label>
+              <Input
+                id="precio_costo"
+                type="number"
+                value={nuevoProducto.precio_costo?.toString() || ""}
+                onChange={(e) => calcularPrecioVentaAndPorcentaje(e)}
+              />
+            </div>
+            <div className="sm:col-span-3">
+              <Label htmlFor="stock">Porcentaje de ganancia</Label>
+              <Input
+                id="porcentaje_ganancia"
+                type="number"
+                value={nuevoProducto.porcentaje_ganancia?.toString() || ""}
+                onChange={(e) => calcularPrecioVentaAndPorcentaje(e)}
+              />
+            </div>
+            <div className="sm:col-span-3">
+              <Label htmlFor="stock">Precio de venta</Label>
               <Input
                 id="precio"
                 type="number"
-                value={nuevoProducto.precio || ""}
-                onChange={(e) =>
-                  setNuevoProducto({
-                    ...nuevoProducto,
-                    precio: e.target.value,
-                  })
-                }
+                value={nuevoProducto.precio?.toString() || ""}
+                onChange={(e) => calcularPrecioVentaAndPorcentaje(e)}
               />
             </div>
             <div className="sm:col-span-3">
               <Label htmlFor="stock">Stock</Label>
               <Input
-                id="stock"
+                id="inStock"
                 type="number"
-                value={nuevoProducto.stock || ""}
+                value={nuevoProducto.inStock?.toString() || ""}
                 onChange={(e) =>
                   setNuevoProducto({
                     ...nuevoProducto,
-                    stock: e.target.value,
+                    inStock: parseInt(e.target.value),
                   })
                 }
               />
@@ -253,54 +286,7 @@ const DialogNuevoProducto = ({
                 </SelectContent>
               </Select>
             </div>
-            <div className="sm:col-span-2">
-              <Label htmlFor="peso">Peso</Label>
-              <Input
-                id="peso"
-                type="number"
-                value={nuevoProducto.peso || ""}
-                onChange={(e) =>
-                  setNuevoProducto({
-                    ...nuevoProducto,
-                    peso: e.target.value,
-                  })
-                }
-              />
-            </div>
-            <div className="sm:col-span-2">
-              <Label htmlFor="tamano">Tamaño</Label>
-              <Input
-                id="tamano"
-                type="number"
-                value={nuevoProducto.tamano || ""}
-                onChange={(e) =>
-                  setNuevoProducto({
-                    ...nuevoProducto,
-                    tamano: e.target.value,
-                  })
-                }
-              />
-            </div>
-            <div className="sm:col-span-2">
-              <Label htmlFor="color">Color</Label>
-              <Select
-                value={nuevoProducto.color || ""}
-                onValueChange={(value) =>
-                  setNuevoProducto({ ...nuevoProducto, color: value })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Seleccione un color" />
-                </SelectTrigger>
-                <SelectContent className="max-h-[400px]">
-                  {colores.map((color: any) => (
-                    <SelectItem key={color.id} value={color.id}>
-                      {color.nombre}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+
             <div className="sm:col-span-3">
               <Label htmlFor="marca">Marca</Label>
               <Input

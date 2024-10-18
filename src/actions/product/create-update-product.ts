@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { Producto } from "@/types";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -10,40 +11,45 @@ const productSchema = z.object({
   descripcion: z.string().min(3).max(255),
   categoria_id: z.string().uuid().optional().nullable(),
   precio: z.preprocess((val) => parseFloat(val as string), z.number().min(0)),
-  codigo_de_barras: z.string().min(3).max(255),
+  precio_costo: z.preprocess(
+    (val) => parseFloat(val as string),
+    z.number().min(0)
+  ),
+  porcentaje_ganancia: z.preprocess(
+    (val) => parseFloat(val as string),
+    z.number().min(0)
+  ),
+  codigo_de_barras: z.string().min(3).max(255).optional().nullable(),
   proveedor_id: z.string().uuid().optional().nullable(),
   codigo_interno: z.string().min(3).max(255),
+  inStock: z.number().min(1),
+  marca: z.string().min(3).max(255),
+  imagen: z.string().min(3).max(255).optional().nullable(),
 });
 
 export const createUpdateProduct = async (
-  formData: FormData
+  product: Producto
 ): Promise<{
   ok: boolean;
   product?: any;
   error?: string;
 }> => {
-  const data = Object.fromEntries(formData);
-
-  console.log({ data });
-
-  const productParsed = productSchema.safeParse({
-    ...data,
-    precio: parseFloat(data.precio as string), // Conversión explícita a número
-  });
+  const productParsed = productSchema.safeParse(product);
 
   if (!productParsed.success) {
-    console.log("Error en la validación:", productParsed.error);
+    console.error("Error en la validación:", productParsed.error);
+    console.log(product);
     return { ok: false, error: "Error en la validación de datos" };
   }
 
-  const product = productParsed.data;
-  const { id, nombre, descripcion, codigo_interno, ...rest } = product;
+  const newProduct = productParsed.data;
+  const { id, nombre, descripcion, codigo_interno, ...rest } = newProduct;
 
   try {
     const dataProduct = {
-      nombre: nombre.toUpperCase(),
-      descripcion: descripcion.toUpperCase(),
-      codigo_interno: codigo_interno.toUpperCase(),
+      nombre: nombre?.toUpperCase(),
+      descripcion: descripcion?.toUpperCase(),
+      codigo_interno: codigo_interno?.toUpperCase(),
       ...rest,
     };
 
