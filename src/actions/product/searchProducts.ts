@@ -49,6 +49,12 @@ export async function searchProducts(args: SearchProductsArgs) {
   const productosConvertidos: Producto[] = productos.map((producto) => ({
     ...producto,
     precio: producto.precio ? parseFloat(producto.precio.toString()) : 0,
+    precio_costo: producto.precio_costo
+      ? parseFloat(producto.precio_costo.toString())
+      : 0,
+    porcentaje_ganancia: producto.porcentaje_ganancia
+      ? parseFloat(producto.porcentaje_ganancia.toString())
+      : 0,
   }));
 
   return productosConvertidos;
