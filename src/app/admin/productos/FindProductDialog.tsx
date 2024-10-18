@@ -3,7 +3,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -180,7 +179,7 @@ export const FindProductDialog = () => {
                   </TableCell>
                 </TableRow>
               ) : (
-                productos.map((producto: productos, index: number) => (
+                productos.map((producto: Producto, index: number) => (
                   <TableRow key={index}>
                     <TableCell>{producto.codigo_interno!}</TableCell>
                     <TableCell>
