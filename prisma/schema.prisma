@@ -114,6 +114,8 @@ model productos {
   nombre                    String?
   descripcion               String?
   precio                    Decimal?                    @db.Decimal
+  precio_costo              Decimal?                    @db.Decimal
+  porcentaje_ganancia       Decimal?                    @db.Decimal
   codigo_de_barras          String?
   proveedor_id              String?                     @db.Uuid
   inStock                   Int                         @default(0)

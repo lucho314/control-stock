@@ -10,6 +10,14 @@ const productSchema = z.object({
   descripcion: z.string().min(3).max(255),
   categoria_id: z.string().uuid().optional().nullable(),
   precio: z.preprocess((val) => parseFloat(val as string), z.number().min(0)),
+  precio_costo: z.preprocess(
+    (val) => parseFloat(val as string),
+    z.number().min(0)
+  ),
+  porcentaje_ganancia: z.preprocess(
+    (val) => parseFloat(val as string),
+    z.number().min(0)
+  ),
   codigo_de_barras: z.string().min(3).max(255),
   proveedor_id: z.string().uuid().optional().nullable(),
   codigo_interno: z.string().min(3).max(255),
