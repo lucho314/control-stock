@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Edit, Trash2 } from "lucide-react";
 import AlertDialogComponent from "./alert-dialog";
 import DialogNuevoProducto from "./dialog-nuevo-producto";
+import Image from "next/image";
 
 interface TableProductosProps {
   productos: any;
@@ -25,8 +26,8 @@ const TableProductos = ({ productos, deleteProduct }: TableProductosProps) => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>ID</TableHead>
-          <TableHead>Nombre</TableHead>
+          <TableHead>Img</TableHead>
+          <TableHead>Descripcion</TableHead>
           <TableHead>Categoría</TableHead>
           <TableHead>Precio</TableHead>
           <TableHead>Stock</TableHead>
@@ -36,8 +37,18 @@ const TableProductos = ({ productos, deleteProduct }: TableProductosProps) => {
       <TableBody>
         {productos.map((producto: any) => (
           <TableRow key={producto.id}>
-            <TableCell>{producto.id}</TableCell>
-            <TableCell>{producto.nombre}</TableCell>
+            <TableCell>
+              {producto.imagen && producto.imagen.startsWith("http") ? (
+                <Image
+                  src={producto.imagen}
+                  alt={producto.descripcion}
+                  width={60}
+                  height={60}
+                  className="w-16 h-14 object-cover rounded-full"
+                />
+              ) : null}
+            </TableCell>
+            <TableCell>{producto.descripcion}</TableCell>
             <TableCell>{producto.categoria}</TableCell>
             {/*<TableCell>${producto.precio.toFixed(2)}</TableCell>*/}
             <TableCell>${producto.precio}</TableCell>
