@@ -26,9 +26,11 @@ const TableProductos = ({ productos, deleteProduct }: TableProductosProps) => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Img</TableHead>
-          <TableHead>Descripcion</TableHead>
+          <TableHead></TableHead>
+          <TableHead className="w-72">Nombre</TableHead>
+          <TableHead className="w-96">Descripcion</TableHead>
           <TableHead>Categoría</TableHead>
+          <TableHead>Proveedor</TableHead>
           <TableHead>Precio</TableHead>
           <TableHead>Stock</TableHead>
           <TableHead className="text-center">Acciones</TableHead>
@@ -48,9 +50,10 @@ const TableProductos = ({ productos, deleteProduct }: TableProductosProps) => {
                 />
               ) : null}
             </TableCell>
-            <TableCell>{producto.descripcion}</TableCell>
-            <TableCell>{producto.categoria}</TableCell>
-            {/*<TableCell>${producto.precio.toFixed(2)}</TableCell>*/}
+            <TableCell className="text-xs">{producto.nombre}</TableCell>
+            <TableCell className="text-xs">{producto.descripcion}</TableCell>
+            <TableCell>{producto.categoria?.nombre}</TableCell>
+            <TableCell>{producto.proveedores.nombre}</TableCell>
             <TableCell>${producto.precio}</TableCell>
             <TableCell>{producto.inStock}</TableCell>
             <TableCell className="flex justify-evenly">

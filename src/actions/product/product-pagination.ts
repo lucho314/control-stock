@@ -31,10 +31,34 @@ export const getPaginatedProducts = async ({
       take: take,
       skip: (page - 1) * take,
       where: {
-        nombre: {
-          contains: q,
-          mode: "insensitive",
-        },
+        OR: [
+          {
+            nombre: {
+              contains: q,
+              mode: "insensitive",
+            },
+          },
+          {
+            categoria: {
+              nombre: {
+                contains: q,
+                mode: "insensitive",
+              },
+            },
+          },
+          {
+            proveedores: {
+              nombre: {
+                contains: q,
+                mode: "insensitive",
+              },
+            },
+          },
+        ],
+      },
+      include: {
+        categoria: true,
+        proveedores: true,
       },
     });
 
