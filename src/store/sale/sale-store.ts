@@ -41,7 +41,17 @@ export const useSaleStore = create<State>()((set, get) => ({
   },
   isValid: false,
   addProductToSale: (product: Producto) => {
-    const { sale } = get();
+    const { sale, updateProductQuantity } = get();
+
+    //verificar si el producto ya esta en la lista. si esta, aumentar la cantidad
+
+    const exist = sale.productos.find((p) => p.producto.id === product.id);
+
+    if (exist) {
+      const quantity = exist.cantidad + 1;
+      updateProductQuantity(product, quantity);
+      return;
+    }
 
     const producVenta: ProductoVenta = {
       id: "",
@@ -201,8 +211,5 @@ function calcullarTotales(productos: ProductoVenta[], bonificacion: number) {
 export async function checkStock(producto: Producto, cantidad: number) {
   if (cantidad === 0) return false;
   const stockDisponible = await getStockByID(producto.id!);
-
-  console.log({ stockDisponible, cantidad });
-
   return stockDisponible >= cantidad;
 }

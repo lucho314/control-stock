@@ -126,7 +126,7 @@ export const GrillaProductoNewSale = () => {
               <Input
                 variant="sm"
                 name="cantidad"
-                defaultValue={cantidad}
+                value={cantidad}
                 ref={cantidadInputRef}
                 onKeyDown={(e) => handlerEnterQuantity(e, producto)}
                 onChange={(e) => handlerFocusOutQuantity(e, producto)}
