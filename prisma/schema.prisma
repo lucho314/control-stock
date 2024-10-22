@@ -123,8 +123,9 @@ model productos {
   tamano                   Decimal?                    @db.Decimal
   color                    String?
   marca                    String?
-  imagen                  String?
-  codigo_interno           String?
+  imagen                  String?                 
+  codigo_interno           String?                    @unique
+  activo                  Boolean?                    @default(true)
   inventario                inventario[]
   movimientos_de_inventario movimientos_de_inventario[]
   niveles_de_stock          niveles_de_stock[]

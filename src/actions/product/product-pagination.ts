@@ -24,6 +24,7 @@ export const getPaginatedProducts = async ({
           contains: q,
           mode: "insensitive",
         },
+        activo: true,
       },
     });
 
@@ -31,6 +32,7 @@ export const getPaginatedProducts = async ({
       take: take,
       skip: (page - 1) * take,
       where: {
+        activo: true,
         OR: [
           {
             nombre: {
