@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { Producto } from "@/types";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { getProductByID } from "./get-product-by-code";
 
 const productSchema = z.object({
   id: z.string().uuid().optional().nullable(),
@@ -33,6 +34,7 @@ export const createUpdateProduct = async (
   ok: boolean;
   product?: any;
   error?: string;
+  type?: string;
 }> => {
   const productParsed = productSchema.safeParse(product);
 
@@ -44,6 +46,24 @@ export const createUpdateProduct = async (
 
   const newProduct = productParsed.data;
   const { id, nombre, descripcion, codigo_interno, ...rest } = newProduct;
+
+  const existProduct = await getProductByID(codigo_interno);
+
+  if (existProduct) {
+    if (existProduct.activo === false) {
+      return {
+        ok: false,
+        error: `El codigo ${codigo_interno} ya existe y corresponde al producto ${existProduct.nombre} pero está inactivo`,
+        type: "inactive",
+      };
+    }
+
+    return {
+      ok: false,
+      error: "Ya existe un producto con ese código",
+      type: "exist",
+    };
+  }
 
   try {
     const dataProduct = {
@@ -69,7 +89,7 @@ export const createUpdateProduct = async (
     }
   } catch (error) {
     console.error("Error al crear/actualizar producto:", error);
-    return { ok: false, error: "Error desconocido" };
+    return { ok: false, error: "Error desconocido", type: "unknown" };
   }
 };
 
