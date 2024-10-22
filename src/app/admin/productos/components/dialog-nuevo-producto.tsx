@@ -1,6 +1,11 @@
 "use client";
 
-import { ChangeEvent, ChangeEventHandler, useEffect, useState } from "react";
+import React, {
+  ChangeEvent,
+  ChangeEventHandler,
+  useEffect,
+  useState,
+} from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -32,6 +37,7 @@ import Image from "next/image";
 import { Textarea } from "@/components/ui/textarea";
 import { Bounce, toast } from "react-toastify";
 import { Producto } from "@/types";
+import { activateProductByCode } from "@/actions/product/activate-product-by-code";
 
 const colores = [
   { id: "Rojo", nombre: "Rojo" },
@@ -90,10 +96,8 @@ const DialogNuevoProducto = ({
     fetchData();
   }, []);
 
-  const handleNuevoProducto = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const { ok, error, type } = await createUpdateProduct(nuevoProducto);
+  const crearProducto = async (producto: Producto) => {
+    const { ok, error, type } = await createUpdateProduct(producto);
 
     if (!ok) {
       if (type === "inactive") {
@@ -127,6 +131,12 @@ const DialogNuevoProducto = ({
         transition: Bounce,
       });
     }
+  };
+
+  const handleNuevoProducto = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    await crearProducto(nuevoProducto);
   };
 
   const calcularPrecioVentaAndPorcentaje = (
@@ -172,6 +182,51 @@ const DialogNuevoProducto = ({
         [whoChanged]: value,
       });
     }
+  };
+
+  const handleActivarProducto = async (codigo_interno: string) => {
+    const { ok, error, updated } = await activateProductByCode({
+      code: codigo_interno,
+    });
+
+    if (!ok) {
+      toast.error(error, {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+      return null;
+    }
+
+    //cerrar modal
+    setIsDialogOpen(false);
+    setNuevoProducto(productDefault);
+
+    return updated;
+  };
+
+  const handleActivarActualizarProducto = async (
+    codigo_interno: string,
+    e: React.FormEvent
+  ) => {
+    const updated = await handleActivarProducto(codigo_interno);
+
+    if (!updated) {
+      return;
+    }
+
+    const product = {
+      ...nuevoProducto,
+      id: updated.id,
+    };
+
+    await crearProducto(product);
   };
 
   return (
@@ -388,8 +443,7 @@ const DialogNuevoProducto = ({
             <Button
               onClick={() => {
                 setIsDialogOpen2(false);
-                setNuevoProducto({ ...nuevoProducto, activo: true });
-                handleNuevoProducto;
+                handleActivarProducto(nuevoProducto.codigo_interno!);
               }}
               variant={"success"}
             >
@@ -397,10 +451,12 @@ const DialogNuevoProducto = ({
             </Button>
 
             <Button
-              onClick={() => {
+              onClick={(e) => {
                 setIsDialogOpen2(false);
-                setNuevoProducto({ ...nuevoProducto, activo: true });
-                handleNuevoProducto;
+                handleActivarActualizarProducto(
+                  nuevoProducto.codigo_interno!,
+                  e
+                );
               }}
             >
               Activar y Actualizar

@@ -47,22 +47,24 @@ export const createUpdateProduct = async (
   const newProduct = productParsed.data;
   const { id, nombre, descripcion, codigo_interno, ...rest } = newProduct;
 
-  const existProduct = await getProductByID(codigo_interno);
+  if (!id) {
+    const existProduct = await getProductByID(codigo_interno);
 
-  if (existProduct) {
-    if (existProduct.activo === false) {
+    if (existProduct) {
+      if (existProduct.activo === false) {
+        return {
+          ok: false,
+          error: `El codigo ${codigo_interno} ya existe y corresponde al producto ${existProduct.nombre} pero está inactivo`,
+          type: "inactive",
+        };
+      }
+
       return {
         ok: false,
-        error: `El codigo ${codigo_interno} ya existe y corresponde al producto ${existProduct.nombre} pero está inactivo`,
-        type: "inactive",
+        error: "Ya existe un producto con ese código",
+        type: "exist",
       };
     }
-
-    return {
-      ok: false,
-      error: "Ya existe un producto con ese código",
-      type: "exist",
-    };
   }
 
   try {
