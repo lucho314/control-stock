@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,49 +17,37 @@ import { Input } from "@/components/ui/input";
 import { createUpdateProvider } from "@/actions";
 import { type Provider } from "@/types";
 import { Bounce, toast } from "react-toastify";
-
-const defaultProvider: Provider = {
-  nombre: "",
-  telefono: "",
-  email: "",
-  direccion: "",
-};
+import { useFormState } from "react-dom";
 
 interface Props {
   provider?: Provider;
   children?: React.ReactNode;
 }
-
-const DialogNewProvider = ({ provider, children }: Props) => {
+const initialState = { message: null, error: {} };
+const Dialogprovider = ({ provider, children }: Props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [newProvider, setNewProvider] = useState<Provider>(
-    provider ?? defaultProvider
-  );
+  const [state, dispatch] = useFormState(createUpdateProvider, initialState);
 
   const title = provider ? "Editar Proveedor" : "Añadir Nuevo Proveedor";
 
-  const handleNuevoProducto = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const { ok, message } = await createUpdateProvider(newProvider);
-
-    if (!ok) {
-      return alert("Error al guardar el proveedor");
+  useEffect(() => {
+    if (state?.message === "successfully") {
+      setIsDialogOpen(false);
+      toast.success("Proveedor registrado correctamente!", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
     }
-    setIsDialogOpen(false);
+  }, [state]);
 
-    toast.success("Proveedor registrado correctamente!", {
-      position: "bottom-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      transition: Bounce,
-    });
-  };
+  console.log(state);
 
   return (
     <>
@@ -73,7 +61,7 @@ const DialogNewProvider = ({ provider, children }: Props) => {
               guardar cuando termine.
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleNuevoProducto}>
+          <form action={dispatch}>
             <div className="grid gap-4 py-4">
               <div className="sm:col-span-6">
                 <Label htmlFor="nombre" className="text-right">
@@ -82,13 +70,15 @@ const DialogNewProvider = ({ provider, children }: Props) => {
 
                 <Input
                   id="nombre"
-                  required
-                  value={newProvider.nombre || ""}
+                  name="nombre"
+                  defaultValue={provider?.nombre || ""}
                   className="col-span-3"
-                  onChange={(e) => {
-                    setNewProvider({ ...newProvider, nombre: e.target.value });
-                  }}
                 />
+                {state?.errors?.nombre && (
+                  <span className="mt-2  text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
+                    {state.errors.nombre.at(0)}
+                  </span>
+                )}
               </div>
               <div className="sm:col-span-6">
                 <Label htmlFor="telefono" className="text-right">
@@ -96,16 +86,16 @@ const DialogNewProvider = ({ provider, children }: Props) => {
                 </Label>
                 <Input
                   id="telefono"
+                  name="telefono"
                   type="tel"
                   className="col-span-3"
-                  value={newProvider.telefono || ""}
-                  onChange={(e) => {
-                    setNewProvider({
-                      ...newProvider,
-                      telefono: e.target.value,
-                    });
-                  }}
+                  defaultValue={provider?.telefono || ""}
                 />
+                {state?.errors?.telefono && (
+                  <span className="mt-2  text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
+                    {state.errors.telefono.at(0)}
+                  </span>
+                )}
               </div>
               <div className="sm:col-span-6">
                 <Label htmlFor="email" className="text-right">
@@ -113,13 +103,15 @@ const DialogNewProvider = ({ provider, children }: Props) => {
                 </Label>
                 <Input
                   id="email"
+                  name="email"
                   className="col-span-3"
-                  value={newProvider.email || ""}
-                  type="email"
-                  onChange={(e) => {
-                    setNewProvider({ ...newProvider, email: e.target.value });
-                  }}
+                  defaultValue={provider?.email || ""}
                 />
+                {state?.errors?.email && (
+                  <span className="mt-2  text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
+                    {state.errors.email.at(0)}
+                  </span>
+                )}
               </div>
               <div className="sm:col-span-6">
                 <Label htmlFor="direccion" className="text-right">
@@ -127,16 +119,16 @@ const DialogNewProvider = ({ provider, children }: Props) => {
                 </Label>
                 <Input
                   id="direccion"
+                  name="direccion"
                   type="text"
-                  value={newProvider.direccion || ""}
+                  defaultValue={provider?.direccion || ""}
                   className="col-span-3"
-                  onChange={(e) => {
-                    setNewProvider({
-                      ...newProvider,
-                      direccion: e.target.value,
-                    });
-                  }}
                 />
+                {state?.errors?.direccion && (
+                  <span className="mt-2  text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block">
+                    {state.errors.direccion.at(0)}
+                  </span>
+                )}
               </div>
             </div>
             <DialogFooter>
@@ -149,4 +141,4 @@ const DialogNewProvider = ({ provider, children }: Props) => {
   );
 };
 
-export default DialogNewProvider;
+export default Dialogprovider;

@@ -1,6 +1,6 @@
 import { getPaginatedProvider } from "@/actions";
 import { Button } from "@/components/ui/button";
-import { CirclePlus, PlusCircle } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import { TableProvider } from "../components/provider/TableProvider";
 import { Paginacion } from "../components/ui/Pagination";
 import { SearchProvider } from "../components/provider/SearchProvider";
