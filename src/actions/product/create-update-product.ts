@@ -5,6 +5,7 @@ import { Producto } from "@/types";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getProductByID } from "./get-product-by-code";
+import { isAdmin } from "@/lib/middleware";
 
 const productSchema = z.object({
   id: z.string().uuid().optional().nullable(),
@@ -36,6 +37,13 @@ export const createUpdateProduct = async (
   error?: string;
   type?: string;
 }> => {
+  const [error, userId] = await isAdmin();
+
+  if (error) {
+    console.error(error);
+    return { ok: false, error };
+  }
+
   const productParsed = productSchema.safeParse(product);
 
   if (!productParsed.success) {
