@@ -1,5 +1,6 @@
 "use server";
 
+import { isAdmin } from "@/lib/middleware";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -50,6 +51,16 @@ export async function createUpdateProvider(
   state: State | void,
   formData: FormData
 ): Promise<State | void> {
+  const [error, userId] = await isAdmin();
+
+  if (error) {
+    console.error(error);
+    return {
+      errors: { id: ["No tienes permisos para realizar esta acción."] }, // O puedes usar un mensaje más apropiado
+      message: "Error de autorización.",
+    };
+  }
+
   // Validación de los datos del formulario
   const validatedFields = providerSchema.safeParse({
     id: formData.get("id"),
