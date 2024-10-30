@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "seed": "ts-node src/seed/seed-database.ts",
-    "migrate": "pnpm prisma migrate dev && ts-node src/DB/runTrigger.ts && prisma generate && pnpm run seed"
+    "migrate": "pnpm prisma migrate deploy && ts-node src/DB/runTrigger.ts && prisma generate && pnpm run seed"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.5.0",
