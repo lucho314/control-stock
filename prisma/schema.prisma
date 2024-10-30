@@ -126,6 +126,10 @@ model productos {
   imagen                  String?                 
   codigo_interno           String?                    @unique
   activo                  Boolean?                    @default(true)
+  created_by              String?                    
+  created_at             DateTime?                   @default(now()) @db.Timestamptz(6)
+  updated_at             DateTime?                   @updatedAt @db.Timestamptz(6)
+  updated_by             String?
   inventario                inventario[]
   movimientos_de_inventario movimientos_de_inventario[]
   niveles_de_stock          niveles_de_stock[]
@@ -143,6 +147,10 @@ model proveedores {
   email            String?
   direccion        String?
   activo           Boolean?          @default(true)
+  created_by              String?                    
+  created_at             DateTime?                   @default(now()) @db.Timestamptz(6)
+  updated_at             DateTime?                   @updatedAt @db.Timestamptz(6)
+  updated_by             String?
   ordenes_de_compra ordenes_de_compra[]
   productos         productos[]
    @@index([activo, nombre])
@@ -171,6 +179,10 @@ model usuarios {
   email               String?
   contrasena          String?
   rol_id              String?               @db.Uuid
+  created_by              String?                    
+  created_at             DateTime?                   @default(now()) @db.Timestamptz(6)
+  updated_at             DateTime?                   @updatedAt @db.Timestamptz(6)
+  updated_by             String?
   acciones_de_usuario acciones_de_usuario[]
   roles               roles?                @relation(fields: [rol_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
@@ -270,6 +282,10 @@ model venta {
    bonificacion   Float?           // Bonificación es opcional
    iva            Float
    total          Float
+   created_by              String?                    
+  created_at             DateTime?                   @default(now()) @db.Timestamptz(6)
+  updated_at             DateTime?                   @updatedAt @db.Timestamptz(6)
+  updated_by             String?
    cliente        clientes         @relation(fields: [clienteId], references: [id])
    productos      venta_producto[] // Relación con venta_producto
 }

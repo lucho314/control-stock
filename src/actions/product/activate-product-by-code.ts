@@ -34,6 +34,7 @@ export const activateProductByCode = async (query: { code: string }) => {
       },
       data: {
         activo: true,
+        updated_by: userId,
       },
     });
 

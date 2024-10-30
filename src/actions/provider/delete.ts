@@ -17,6 +17,7 @@ export const deleteProvider = async (id: string) => {
     },
     data: {
       activo: false,
+      updated_by: userId,
     },
   });
   revalidatePath("/providers");

@@ -86,12 +86,12 @@ export async function createUpdateProvider(
       // Actualizar proveedor existente
       await prisma.proveedores.update({
         where: { id },
-        data: { ...rest },
+        data: { ...rest, updated_by: userId },
       });
     } else {
       // Crear nuevo proveedor
       await prisma.proveedores.create({
-        data: { ...rest },
+        data: { ...rest, created_by: userId },
       });
     }
 

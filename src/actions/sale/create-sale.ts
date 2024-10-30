@@ -1,5 +1,6 @@
 "use server";
 
+import { isAdmin } from "@/lib/middleware";
 import prisma from "@/lib/prisma";
 import { ProductoVenta, sumarySale, Venta, type Provider } from "@/types";
 import { FormaDePago, productos } from "@prisma/client";
@@ -51,6 +52,13 @@ const checkStock = async (products: ProductoVenta[]) => {
 };
 
 export const createSale = async (venta: sumarySale) => {
+  const [error, userId] = await isAdmin();
+
+  if (error) {
+    console.error(error);
+    return { ok: false, error };
+  }
+
   const saleParse = providerSchema.safeParse(venta);
 
   if (!saleParse.success) {
@@ -71,6 +79,7 @@ export const createSale = async (venta: sumarySale) => {
     const transaction = await prisma.$transaction([
       prisma.venta.create({
         data: {
+          created_by: userId,
           numeracion: sale.numeracion,
           fecha: sale.fecha,
           subTotal: sale.subTotal,
