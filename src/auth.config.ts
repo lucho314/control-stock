@@ -1,9 +1,8 @@
-import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-
-import { z } from "zod";
 import prisma from "./lib/prisma";
 import bcryptjs from "bcryptjs";
+import NextAuth from "next-auth";
+import { z } from "zod";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   pages: {
@@ -36,9 +35,25 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         const { password: _, ...rest } = user;
 
+        console.log(rest);
+
         return rest;
       },
     }),
   ],
+  callbacks: {
+    jwt({ token, user }) {
+      if (user) {
+        token.data = user;
+      }
+
+      return token;
+    },
+
+    session({ session, token, user }) {
+      session.user = token.data as any;
+      return session;
+    },
+  },
   trustHost: true,
 });
