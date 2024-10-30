@@ -333,6 +333,7 @@ export const initialData: SeedData = {
       marca: "Motul",
       imagen: "https://ar.moovelub.com/storage/uploads/00000000340.png",
       codigo_interno: "MT003",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "KIT DE HERRAMIENTAS HONDA",
@@ -377,6 +378,7 @@ export const initialData: SeedData = {
       marca: "Honda",
       imagen: "https://http2.mlstatic.com/D_932217-MLA74928491757_032024-C.jpg",
       codigo_interno: "210FH",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "AMORTIGUADOR TRASERO HONDA",
