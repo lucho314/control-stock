@@ -11,6 +11,7 @@ interface SeedProduct {
   marca: string;
   imagen: string;
   codigo_interno: string;
+  created_by: string;
 }
 
 interface SeedProveedor {
@@ -18,9 +19,11 @@ interface SeedProveedor {
   direccion: string;
   telefono: string;
   email: string;
+  created_by: string;
 }
 
 interface SeedUser {
+  id: string;
   email: string;
   password: string;
   name: string;
@@ -42,12 +45,14 @@ interface SeedData {
 export const initialData: SeedData = {
   users: [
     {
+      id: "c7fe7451-1610-42c2-8984-7116634c4a0f",
       email: "admin@admin.com",
       name: "Administrador",
       password: bcryptjs.hashSync("123456"),
       role: "admin",
     },
     {
+      id: "d1668f75-b7fe-4686-b306-3e33b18a5bba",
       email: "melissa@google.com",
       name: "Melissa Flores",
       password: bcryptjs.hashSync("123456"),
@@ -60,132 +65,154 @@ export const initialData: SeedData = {
       direccion: "Av. Libertador 1234, Buenos Aires",
       telefono: "+54 11 1234-5678",
       email: "telefono@repuestosmoto.com",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "Motopartes Argentina",
       direccion: "Calle San Martín 456, Córdoba",
       telefono: "+54 351 9876-5432",
       email: "info@motopartesarg.com",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "Moto Accesorios S.R.L.",
       direccion: "Av. Rivadavia 5678, Buenos Aires",
       telefono: "+54 11 2345-6789",
       email: "contacto@motoaccesorios.com",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "Repuestos Rápidos",
       direccion: "Av. Santa Fe 2345, Buenos Aires",
       telefono: "+54 11 3456-7890",
       email: "info@repuestosrapidos.com",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "Talleres Moto S.A.",
       direccion: "Calle San Juan 789, Rosario",
       telefono: "+54 341 4567-8901",
       email: "ventas@talleresmoto.com",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "Moto Repuestos S.A.",
       direccion: "Av. General Paz 1010, Buenos Aires",
       telefono: "+54 11 4567-8902",
       email: "info@moto-repuestos.com",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "Accesorios de Motocicleta",
       direccion: "Calle Mitre 234, La Plata",
       telefono: "+54 221 5678-9012",
       email: "contacto@accesoriosmoto.com",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "Moto Parts Co.",
       direccion: "Calle Belgrano 3456, Mendoza",
       telefono: "+54 261 6789-0123",
       email: "info@motopartsco.com",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "Repuestos y Accesorios",
       direccion: "Av. Corrientes 4567, Buenos Aires",
       telefono: "+54 11 7890-1234",
       email: "ventas@repuestosyaccesorios.com",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "Motomundi",
       direccion: "Calle Córdoba 876, Santa Fe",
       telefono: "+54 342 8901-2345",
       email: "contacto@motomundi.com",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "Tienda de Motocicletas",
       direccion: "Calle Sarmiento 321, Tucumán",
       telefono: "+54 381 9012-3456",
       email: "info@tiendamotocicletas.com",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "Repuestos en Línea",
       direccion: "Av. Alem 4321, Bahía Blanca",
       telefono: "+54 291 0123-4567",
       email: "contacto@repuestosenlinea.com",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "Moto Expertos",
       direccion: "Calle Rivadavia 567, Salta",
       telefono: "+54 387 1234-5678",
       email: "info@motoexpertos.com",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "Accesorios para Motocicletas",
       direccion: "Av. de Mayo 8910, Quilmes",
       telefono: "+54 11 1234-5670",
       email: "contacto@accesoriosmotocicletas.com",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "Motocicletas S.A.",
       direccion: "Calle Mendoza 1234, San Juan",
       telefono: "+54 264 2345-6789",
       email: "ventas@motocicletassa.com",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "Todo Moto",
       direccion: "Calle 9 de Julio 456, Mar del Plata",
       telefono: "+54 223 3456-7890",
       email: "info@todomoto.com",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "Moto y Más",
       direccion: "Av. Libertador 789, Rosario",
       telefono: "+54 341 5678-9012",
       email: "contacto@motoymas.com",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "Accesorios y Repuestos",
       direccion: "Calle Almirante Brown 234, Mendoza",
       telefono: "+54 261 6789-0124",
       email: "info@accesoriosyrepuestos.com",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "Repuestos y Más",
       direccion: "Calle San Lorenzo 321, Jujuy",
       telefono: "+54 388 7890-1234",
       email: "ventas@repuestosymas.com",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "Tienda Moto",
       direccion: "Av. Centenario 567, Neuquén",
       telefono: "+54 299 8901-2345",
       email: "contacto@tiendamoto.com",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "Repuestos para Motos",
       direccion: "Calle San Luis 876, San Luis",
       telefono: "+54 266 0123-4567",
       email: "info@repuestosparamotos.com",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "Moto Repuestos y Accesorios",
       direccion: "Av. 25 de Mayo 1010, Chaco",
       telefono: "+54 362 1234-5678",
       email: "contacto@moto-repuestos.com",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
   ],
 
@@ -276,6 +303,7 @@ export const initialData: SeedData = {
       marca: "Sena",
       imagen: "https://m.media-amazon.com/images/I/51F0jBNsUZL._AC_SL1500_.jpg",
       codigo_interno: "SN008",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "BUJÍA NGK IRIDIUM",
@@ -290,6 +318,7 @@ export const initialData: SeedData = {
       imagen:
         "https://acdn.mitiendanube.com/stores/108/925/products/thp-x1-0863f93daa99e57f1f17164811657594-1024-1024.jpg",
       codigo_interno: "456FG",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "LUBRICANTE MOTUL 300V",
@@ -319,6 +348,7 @@ export const initialData: SeedData = {
       imagen:
         "https://http2.mlstatic.com/D_NQ_NP_915607-MLA75070271330_032024-O.webp",
       codigo_interno: "HN007",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "CARENADO COMPLETO KAWASAKI ZX-6R",
@@ -333,6 +363,7 @@ export const initialData: SeedData = {
       imagen:
         "https://m.media-amazon.com/images/I/61k6sFlhqZL._AC_UF894,1000_QL80_.jpg",
       codigo_interno: "KW005",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "LLAVE DE IMPACTO HONDA",
@@ -360,6 +391,7 @@ export const initialData: SeedData = {
       imagen:
         "https://andreanimhs.com/img/product/img-00000199-600x600-pad.jpg?token=73c51afa8186877cfb5129bfb0c06acd",
       codigo_interno: "123DE",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "FRENO DE DISCO TRASERO SUZUKI",
@@ -374,6 +406,7 @@ export const initialData: SeedData = {
       imagen:
         "https://http2.mlstatic.com/D_NQ_NP_865825-CBT73561151923_122023-O.webp",
       codigo_interno: "SZ004",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "FRENOS DE DISCO GALFER",
@@ -389,6 +422,7 @@ export const initialData: SeedData = {
       imagen:
         "https://i.ebayimg.com/thumbs/images/g/ZG0AAOSwa45ml-1R/s-l1200.jpg",
       codigo_interno: "GF009",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "CARENADO FRONTAL HONDA CBR",
@@ -403,6 +437,7 @@ export const initialData: SeedData = {
       imagen:
         "https://http2.mlstatic.com/D_NQ_NP_990036-MLA74687587911_022024-O.webp",
       codigo_interno: "213FH",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "PASTILLAS DE FRENO TRASERO SUZUKI",
@@ -418,6 +453,7 @@ export const initialData: SeedData = {
       imagen:
         "https://http2.mlstatic.com/D_NQ_NP_870408-MLA51669645351_092022-O.webp",
       codigo_interno: "213FQ",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
     {
       nombre: "CÁMARA DE AIRE PIRELLI",
@@ -432,6 +468,7 @@ export const initialData: SeedData = {
       imagen:
         "https://http2.mlstatic.com/D_NQ_NP_981990-MLU73109711247_112023-O.webp",
       codigo_interno: "PR006",
+      created_by: "c7fe7451-1610-42c2-8984-7116634c4a0f",
     },
   ],
 };
