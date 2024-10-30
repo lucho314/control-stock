@@ -86,13 +86,19 @@ export const createUpdateProduct = async (
     if (id) {
       const updatedProduct = await prisma.productos.update({
         where: { id },
-        data: dataProduct,
+        data: {
+          ...dataProduct,
+          created_by: userId,
+        },
       });
       revalidatePath("/productos");
       return { ok: true, product: updatedProduct };
     } else {
       const newProduct = await prisma.productos.create({
-        data: dataProduct,
+        data: {
+          ...dataProduct,
+          updated_by: userId,
+        },
       });
       revalidatePath("/productos");
       return { ok: true, product: newProduct };
