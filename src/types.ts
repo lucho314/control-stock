@@ -7,13 +7,24 @@ import {
   venta_producto,
 } from "@prisma/client";
 
-export type Provider = Omit<proveedores, "id" | "activo"> & {
+export type Provider = Omit<
+  proveedores,
+  "id" | "activo" | "created_by" | "created_at" | "updated_at" | "updated_by"
+> & {
   id?: string;
 };
 
 export type Producto = Omit<
   productos,
-  "id" | "precio" | "precio_costo" | "porcentaje_ganancia" | "codigo_de_barras"
+  | "id"
+  | "precio"
+  | "precio_costo"
+  | "porcentaje_ganancia"
+  | "codigo_de_barras"
+  | "created_by"
+  | "created_at"
+  | "updated_at"
+  | "updated_by"
 > & {
   id?: string;
   precio: number | null;
@@ -29,7 +40,10 @@ export type ProductoVenta = Omit<venta_producto, "id"> & {
 
 export type Cliente = Partial<clientes>;
 
-export type Venta = Omit<venta, "id"> & {
+export type Venta = Omit<
+  venta,
+  "id" | "created_by" | "created_at" | "updated_at" | "updated_by"
+> & {
   id?: string;
   productos: ProductoVenta[];
   cliente: Cliente;
