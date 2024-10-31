@@ -18,6 +18,9 @@ import { createUpdateProvider } from "@/actions";
 import { type Provider } from "@/types";
 import { Bounce, toast } from "react-toastify";
 import { useFormState } from "react-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { providerSchema } from "@/schemas/provider-schema";
 
 interface Props {
   provider?: Provider;
@@ -27,6 +30,13 @@ const initialState = { message: null, error: {} };
 const Dialogprovider = ({ provider, children }: Props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [state, dispatch] = useFormState(createUpdateProvider, initialState);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(providerSchema),
+  });
 
   const title = provider ? "Editar Proveedor" : "Añadir Nuevo Proveedor";
 
@@ -46,8 +56,6 @@ const Dialogprovider = ({ provider, children }: Props) => {
       });
     }
   }, [state]);
-
-  console.log(state);
 
   return (
     <>
